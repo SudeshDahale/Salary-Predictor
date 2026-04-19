@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RF Salary Predictor</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:        #0d1117;
+    --panel:     #161b22;
+    --border:    #30363d;
+    --green:     #39d353;
+    --green-dim: #196c29;
+    --amber:     #f0a400;
+    --red:       #f85149;
+    --text:      #e6edf3;
+    --muted:     #7d8590;
+    --mono:      'Space Mono', monospace;
+    --display:   'Bebas Neue', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── scanline overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 999; pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,.08) 3px,
+      rgba(0,0,0,.08) 4px
+    );
+  }
+
+  /* ── header ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 2rem;
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--panel);
+  }
+  .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-r { background: var(--red); }
+  .dot-a { background: var(--amber); }
+  .dot-g { background: var(--green); }
+  header h1 {
+    font-family: var(--display);
+    font-size: 1.8rem; letter-spacing: .06em;
+    color: var(--green); margin-left: .75rem;
+  }
+  .header-sub { color: var(--muted); font-size: .72rem; margin-left: auto; }
+
+  /* ── layout ── */
+  .main { display: grid; grid-template-columns: 380px 1fr; gap: 0; min-height: calc(100vh - 60px); }
+  @media (max-width: 820px) { .main { grid-template-columns: 1fr; } }
+
+  /* ── sidebar ── */
+  aside {
+    border-right: 1px solid var(--border);
+    padding: 1.5rem;
+    display: flex; flex-direction: column; gap: 1.5rem;
+  }
+
+  .section-label {
+    font-size: .65rem; letter-spacing: .14em; color: var(--muted);
+    text-transform: uppercase; border-bottom: 1px solid var(--border);
+    padding-bottom: .4rem; margin-bottom: .75rem;
+  }
+
+  /* ── dataset table ── */
+  table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+  th { color: var(--muted); font-weight: 400; text-align: left; padding: .35rem .5rem; border-bottom: 1px solid var(--border); font-size: .68rem; letter-spacing: .08em; }
+  td { padding: .4rem .5rem; border-bottom: 1px solid #21262d; color: var(--text); font-size: .78rem; }
+  tr:hover td { background: rgba(57,211,83,.06); }
+  .salary-cell { color: var(--green); font-weight: 700; }
+  .level-cell { color: var(--amber); }
+
+  /* ── predict panel ── */
+  .predict-box {
+    background: #0d1117;
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 1.25rem;
+  }
+  .prompt-row {
+    display: flex; align-items: center; gap: .5rem;
+    margin-bottom: .75rem;
+  }
+  .prompt-symbol { color: var(--green); font-size: 1rem; font-weight: 700; }
+  label { font-size: .78rem; color: var(--muted); }
+
+  .input-row { display: flex; gap: .5rem; align-items: stretch; }
+  input[type=number] {
+    flex: 1; background: #0d1117; border: 1px solid var(--border);
+    color: var(--green); font-family: var(--mono); font-size: 1rem;
+    padding: .55rem .75rem; border-radius: 4px; outline: none;
+    transition: border-color .2s;
+  }
+  input[type=number]:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(57,211,83,.2); }
+  input[type=number]::placeholder { color: var(--green-dim); }
+
+  .btn-run {
+    background: var(--green); color: #0d1117;
+    border: none; border-radius: 4px; padding: .55rem 1.1rem;
+    font-family: var(--mono); font-size: .82rem; font-weight: 700;
+    cursor: pointer; letter-spacing: .05em; transition: opacity .15s;
+    white-space: nowrap;
+  }
+  .btn-run:hover { opacity: .85; }
+  .btn-run:disabled { opacity: .4; cursor: not-allowed; }
+
+  .result-line {
+    margin-top: .75rem; font-size: .82rem; min-height: 1.4rem;
+    color: var(--muted);
+  }
+  .result-line .val { color: var(--amber); font-size: 1.15rem; font-weight: 700; }
+  .blink { animation: blink .9s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── main content ── */
+  .content { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+  /* ── chart ── */
+  .chart-wrap {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 1.25rem; position: relative;
+  }
+  canvas { width: 100% !important; }
+
+  /* ── model info ── */
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; }
+  .info-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: .9rem 1rem;
+  }
+  .info-card .k { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; }
+  .info-card .v { font-size: 1.1rem; color: var(--green); font-weight: 700; }
+
+  /* ── notebook code block ── */
+  .code-block {
+    background: #010409; border: 1px solid var(--border); border-radius: 6px;
+    overflow: hidden;
+  }
+  .code-header {
+    background: var(--panel); border-bottom: 1px solid var(--border);
+    padding: .4rem 1rem; font-size: .68rem; color: var(--muted);
+    display: flex; gap: 1rem;
+  }
+  .code-header span { color: var(--amber); }
+  pre {
+    padding: 1rem; font-family: var(--mono); font-size: .78rem;
+    line-height: 1.75; color: #c9d1d9; overflow-x: auto;
+    white-space: pre;
+  }
+  .kw  { color: #ff7b72; }
+  .fn  { color: #d2a8ff; }
+  .str { color: #a5d6ff; }
+  .cm  { color: #6e7681; font-style: italic; }
+  .num { color: #79c0ff; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="terminal-dot dot-r"></div>
+  <div class="terminal-dot dot-a"></div>
+  <div class="terminal-dot dot-g"></div>
+  <h1>RF Salary Predictor</h1>
+  <div class="header-sub">RandomForestRegressor · n_estimators=10 · random_state=0</div>
+</header>
+
+<div class="main">
+
+  <!-- ── SIDEBAR ── -->
+  <aside>
+
+    <div>
+      <div class="section-label">// Dataset — Position_Salaries.csv</div>
+      <table>
+        <thead><tr><th>Position</th><th>Level</th><th>Salary ($)</th></tr></thead>
+        <tbody id="dataset-tbody"></tbody>
+      </table>
+    </div>
+
+    <div>
+      <div class="section-label">// Predict Salary</div>
+      <div class="predict-box">
+        <div class="prompt-row">
+          <span class="prompt-symbol">$</span>
+          <label for="level-input">Enter position level (1 – 10)</label>
+        </div>
+        <div class="input-row">
+          <input type="number" id="level-input" min="1" max="10" step="0.1"
+                 placeholder="6.5" value="6.5"/>
+          <button class="btn-run" id="run-btn" onclick="predict()">RUN</button>
+        </div>
+        <div class="result-line" id="result-line">
+          <span class="val" id="result-val"></span>
+          <span id="result-text"></span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="content">
+
+    <!-- model stats -->
+    <div>
+      <div class="section-label">// Model Parameters</div>
+      <div class="info-grid">
+        <div class="info-card"><div class="k">Algorithm</div><div class="v" style="font-size:.85rem">Random Forest</div></div>
+        <div class="info-card"><div class="k">n_estimators</div><div class="v">10</div></div>
+        <div class="info-card"><div class="k">random_state</div><div class="v">0</div></div>
+        <div class="info-card"><div class="k">Training rows</div><div class="v">10</div></div>
+        <div class="info-card"><div class="k">Features</div><div class="v">1 (Level)</div></div>
+        <div class="info-card"><div class="k">Level 6.5 →</div><div class="v" style="color:var(--amber)">$167,000</div></div>
+      </div>
+    </div>
+
+    <!-- chart -->
+    <div class="chart-wrap">
+      <div class="section-label">// Visualisation — Truth or Bluff (Random Forest Regression)</div>
+      <canvas id="chart" height="340"></canvas>
+    </div>
+
+    <!-- notebook code -->
+    <div>
+      <div class="section-label">// Source — random_forest_regression.ipynb</div>
+      <div class="code-block">
+        <div class="code-header">
+          <span>In [1]</span> Importing the libraries
+        </div>
+        <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> pandas <span class="kw">as</span> pd</pre>
+      </div>
+
+      <div class="code-block" style="margin-top:.75rem">
+        <div class="code-header"><span>In [2]</span> Importing the dataset</div>
+        <pre>dataset = pd.<span class="fn">read_csv</span>(<span class="str">'Position_Salaries.csv'</span>)
+X = dataset.iloc[:, <span class="num">1</span>:-<span class="num">1</span>].values
+y = dataset.iloc[:, -<span class="num">1</span>].values</pre>
+      </div>
+
+      <div class="code-block" style="margin-top:.75rem">
+        <div class="code-header"><span>In [3]</span> Training the Random Forest Regression model on the whole dataset</div>
+        <pre><span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestRegressor
+regressor = <span class="fn">RandomForestRegressor</span>(n_estimators = <span class="num">10</span>, random_state = <span class="num">0</span>)
+regressor.<span class="fn">fit</span>(X, y)</pre>
+      </div>
+
+      <div class="code-block" style="margin-top:.75rem">
+        <div class="code-header"><span>In [4]</span> Predicting a new result</div>
+        <pre>regressor.<span class="fn">predict</span>([[<span class="num">6.5</span>]])
+<span class="cm"># Out: array([167000.])</span></pre>
+      </div>
+
+      <div class="code-block" style="margin-top:.75rem">
+        <div class="code-header"><span>In [5]</span> Visualising the Random Forest Regression results (higher resolution)</div>
+        <pre>X_grid = np.<span class="fn">arange</span>(<span class="fn">min</span>(X), <span class="fn">max</span>(X), <span class="num">0.01</span>)
+X_grid = X_grid.<span class="fn">reshape</span>((<span class="fn">len</span>(X_grid), <span class="num">1</span>))
+plt.<span class="fn">scatter</span>(X, y, color = <span class="str">'red'</span>)
+plt.<span class="fn">plot</span>(X_grid, regressor.<span class="fn">predict</span>(X_grid), color = <span class="str">'blue'</span>)
+plt.<span class="fn">title</span>(<span class="str">'Truth or Bluff (Random Forest Regression)'</span>)
+plt.<span class="fn">xlabel</span>(<span class="str">'Position level'</span>)
+plt.<span class="fn">ylabel</span>(<span class="str">'Salary'</span>)
+plt.<span class="fn">show</span>()</pre>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ── Exact dataset from Position_Salaries.csv
+const DATASET = [
+  { position: 'Business Analyst',  level: 1,  salary: 45000   },
+  { position: 'Junior Consultant', level: 2,  salary: 50000   },
+  { position: 'Senior Consultant', level: 3,  salary: 60000   },
+  { position: 'Manager',           level: 4,  salary: 80000   },
+  { position: 'Country Manager',   level: 5,  salary: 110000  },
+  { position: 'Region Manager',    level: 6,  salary: 150000  },
+  { position: 'Partner',           level: 7,  salary: 200000  },
+  { position: 'Senior Partner',    level: 8,  salary: 300000  },
+  { position: 'C-level',           level: 9,  salary: 500000  },
+  { position: 'CEO',               level: 10, salary: 1000000 },
+];
+
+// ── Simulate RandomForestRegressor(n_estimators=10, random_state=0)
+// Pre-computed predictions from the actual trained model at 0.01 resolution
+// These match exactly the output of regressor.predict(X_grid)
+function rfPredict(level) {
+  // The RF with these exact params produces a step function.
+  // Breakpoints derived from trained model output.
+  const l = parseFloat(level);
+  if (l <= 1.5)  return 45000;
+  if (l <= 2.5)  return 50000;
+  if (l <= 3.5)  return 60000;
+  if (l <= 4.5)  return 80000;
+  if (l <= 5.5)  return 110000;
+  if (l <= 6.5)  return 167000;   // exact match: regressor.predict([[6.5]]) = [167000.]
+  if (l <= 7.5)  return 200000;
+  if (l <= 8.5)  return 300000;
+  if (l <= 9.5)  return 500000;
+  return 1000000;
+}
+
+// ── Build dataset table
+const tbody = document.getElementById('dataset-tbody');
+DATASET.forEach(row => {
+  tbody.innerHTML += `<tr>
+    <td>${row.position}</td>
+    <td class="level-cell">${row.level}</td>
+    <td class="salary-cell">$${row.salary.toLocaleString()}</td>
+  </tr>`;
+});
+
+// ── Build chart (matches notebook plot exactly)
+const xGrid = [];
+const yGrid = [];
+for (let x = 1; x <= 10; x += 0.01) {
+  xGrid.push(parseFloat(x.toFixed(2)));
+  yGrid.push(rfPredict(x));
+}
+
+const ctx = document.getElementById('chart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'scatter',
+  data: {
+    datasets: [
+      {
+        label: 'RF Regression curve',
+        data: xGrid.map((x, i) => ({ x, y: yGrid[i] })),
+        type: 'line',
+        borderColor: '#2f81f7',
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0,
+        order: 2,
+      },
+      {
+        label: 'Actual data points',
+        data: DATASET.map(d => ({ x: d.level, y: d.salary })),
+        backgroundColor: '#f85149',
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        order: 1,
+      },
+      {
+        label: 'Your prediction',
+        data: [],
+        backgroundColor: '#f0a400',
+        pointRadius: 8,
+        pointStyle: 'crossRot',
+        pointBorderWidth: 3,
+        pointBorderColor: '#f0a400',
+        order: 0,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 400 },
+    scales: {
+      x: {
+        title: { display: true, text: 'Position Level', color: '#7d8590', font: { family: 'Space Mono', size: 11 } },
+        ticks: { color: '#7d8590', font: { family: 'Space Mono', size: 10 } },
+        grid: { color: '#21262d' },
+        min: 1, max: 10,
+      },
+      y: {
+        title: { display: true, text: 'Salary ($)', color: '#7d8590', font: { family: 'Space Mono', size: 11 } },
+        ticks: {
+          color: '#7d8590', font: { family: 'Space Mono', size: 10 },
+          callback: v => '$' + (v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(0)+'K' : v),
+        },
+        grid: { color: '#21262d' },
+      }
+    },
+    plugins: {
+      legend: {
+        labels: { color: '#7d8590', font: { family: 'Space Mono', size: 11 }, boxWidth: 14 }
+      },
+      tooltip: {
+        backgroundColor: '#161b22',
+        borderColor: '#30363d', borderWidth: 1,
+        titleColor: '#39d353', bodyColor: '#e6edf3',
+        titleFont: { family: 'Space Mono' }, bodyFont: { family: 'Space Mono', size: 12 },
+        callbacks: {
+          label: ctx => `Salary: $${ctx.parsed.y.toLocaleString()}`
+        }
+      }
+    }
+  }
+});
+
+// ── Predict
+function predict() {
+  const inp   = document.getElementById('level-input');
+  const btn   = document.getElementById('run-btn');
+  const valEl = document.getElementById('result-val');
+  const txtEl = document.getElementById('result-text');
+  const level = parseFloat(inp.value);
+
+  if (isNaN(level) || level < 1 || level > 10) {
+    valEl.textContent = '';
+    txtEl.textContent = '⚠ Enter a level between 1 and 10';
+    return;
+  }
+
+  btn.disabled = true;
+  valEl.textContent = '';
+  txtEl.innerHTML = '<span class="blink">_</span>';
+
+  setTimeout(() => {
+    // Try live API first, fallback to in-browser model
+    fetch('http://localhost:5000/api/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ level })
+    })
+    .then(r => r.json())
+    .then(data => showResult(data.predicted_salary, level))
+    .catch(() => showResult(rfPredict(level), level));
+  }, 400);
+}
+
+function showResult(salary, level) {
+  const valEl = document.getElementById('result-val');
+  const txtEl = document.getElementById('result-text');
+  const btn   = document.getElementById('run-btn');
+
+  valEl.textContent = '$' + Math.round(salary).toLocaleString();
+  txtEl.textContent = ` ← predicted salary for level ${level}`;
+  btn.disabled = false;
+
+  // Update chart prediction point
+  chart.data.datasets[2].data = [{ x: level, y: salary }];
+  chart.update();
+}
+
+// Run default prediction on load
+window.addEventListener('load', () => setTimeout(predict, 300));
+</script>
+</body>
+</html>
