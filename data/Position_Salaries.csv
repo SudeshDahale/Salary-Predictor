@@ -1,11 +1,521 @@
 Position,Level,Salary
-Business Analyst,1,45000
-Junior Consultant,2,50000
-Senior Consultant,3,60000
-Manager,4,80000
-Country Manager,5,110000
-Region Manager,6,150000
-Partner,7,200000
-Senior Partner,8,300000
-C-level,9,500000
-CEO,10,1000000
+Senior Consultant #621,3,60000
+CEO #547,10,1000000
+Country Manager #578,5,110000
+Senior Consultant #201,3,60000
+Junior Consultant #682,2,50000
+CEO #428,10,1000000
+Country Manager #326,5,110000
+CEO #734,10,1000000
+Region Manager #656,6,150000
+Senior Consultant #68,3,60000
+Manager #664,4,80000
+Senior Partner #12,8,300000
+Manager #557,4,80000
+Business Analyst #164,1,45000
+Senior Consultant #19,3,60000
+Junior Consultant #109,2,50000
+Senior Consultant #37,3,60000
+Partner #708,7,200000
+Partner #258,7,200000
+Partner #734,7,200000
+Junior Consultant #709,2,50000
+Senior Partner #142,8,300000
+C-level #271,9,500000
+Partner #735,7,200000
+Senior Consultant #239,3,60000
+Senior Partner #317,8,300000
+Country Manager #597,5,110000
+CEO #637,10,1000000
+Country Manager #649,5,110000
+Region Manager #686,6,150000
+Manager #122,4,80000
+Manager #990,4,80000
+Region Manager #871,6,150000
+Senior Consultant #395,3,60000
+Country Manager #166,5,110000
+Junior Consultant #518,2,50000
+CEO #783,10,1000000
+Manager #882,4,80000
+Partner #790,7,200000
+Country Manager #326,5,110000
+Junior Consultant #738,2,50000
+CEO #200,10,1000000
+Senior Consultant #56,3,60000
+CEO #494,10,1000000
+Senior Partner #398,8,300000
+CEO #306,10,1000000
+CEO #24,10,1000000
+Business Analyst #152,1,45000
+Country Manager #276,5,110000
+Region Manager #208,6,150000
+Business Analyst #694,1,45000
+Junior Consultant #255,2,50000
+Partner #219,7,200000
+Senior Partner #733,8,300000
+Senior Partner #940,8,300000
+Senior Consultant #60,3,60000
+Manager #429,4,80000
+Partner #598,7,200000
+Senior Consultant #938,3,60000
+C-level #602,9,500000
+Business Analyst #507,1,45000
+Business Analyst #592,1,45000
+Senior Partner #100,8,300000
+C-level #155,9,500000
+Manager #957,4,80000
+Partner #672,7,200000
+Manager #250,4,80000
+Region Manager #913,6,150000
+Country Manager #261,5,110000
+Junior Consultant #587,2,50000
+Region Manager #231,6,150000
+Senior Partner #855,8,300000
+Manager #380,4,80000
+Junior Consultant #28,2,50000
+Junior Consultant #403,2,50000
+Business Analyst #530,1,45000
+C-level #19,9,500000
+CEO #393,10,1000000
+Business Analyst #331,1,45000
+Partner #344,7,200000
+Senior Consultant #443,3,60000
+Junior Consultant #876,2,50000
+C-level #45,9,500000
+Manager #337,4,80000
+CEO #793,10,1000000
+Junior Consultant #561,2,50000
+Senior Consultant #805,3,60000
+Senior Consultant #71,3,60000
+Business Analyst #256,1,45000
+Country Manager #850,5,110000
+Partner #933,7,200000
+Business Analyst #824,1,45000
+Manager #332,4,80000
+CEO #157,10,1000000
+Partner #798,7,200000
+Partner #561,7,200000
+Senior Consultant #546,3,60000
+Junior Consultant #969,2,50000
+CEO #624,10,1000000
+CEO #112,10,1000000
+Manager #873,4,80000
+Senior Partner #404,8,300000
+Junior Consultant #498,2,50000
+CEO #925,10,1000000
+Region Manager #589,6,150000
+Country Manager #644,5,110000
+C-level #595,9,500000
+Senior Partner #176,8,300000
+Partner #402,7,200000
+Manager #897,4,80000
+Junior Consultant #229,2,50000
+Junior Consultant #697,2,50000
+Manager #310,4,80000
+Partner #135,7,200000
+Junior Consultant #46,2,50000
+Business Analyst #428,1,45000
+Manager #188,4,80000
+Manager #766,4,80000
+Junior Consultant #572,2,50000
+Senior Consultant #970,3,60000
+C-level #196,9,500000
+Business Analyst #798,1,45000
+Country Manager #376,5,110000
+Senior Partner #709,8,300000
+C-level #771,9,500000
+Senior Consultant #221,3,60000
+Partner #314,7,200000
+Manager #85,4,80000
+Region Manager #748,6,150000
+Region Manager #976,6,150000
+Senior Consultant #797,3,60000
+CEO #501,10,1000000
+Partner #919,7,200000
+Junior Consultant #197,2,50000
+Manager #646,4,80000
+C-level #205,9,500000
+Business Analyst #334,1,45000
+Partner #960,7,200000
+C-level #811,9,500000
+Country Manager #703,5,110000
+Senior Consultant #454,3,60000
+Region Manager #945,6,150000
+Region Manager #786,6,150000
+Junior Consultant #298,2,50000
+Region Manager #769,6,150000
+Senior Consultant #31,3,60000
+C-level #579,9,500000
+Region Manager #930,6,150000
+Partner #717,7,200000
+Junior Consultant #579,2,50000
+CEO #302,10,1000000
+Senior Partner #257,8,300000
+Manager #552,4,80000
+Business Analyst #23,1,45000
+Partner #995,7,200000
+Junior Consultant #89,2,50000
+Partner #966,7,200000
+Business Analyst #437,1,45000
+Partner #396,7,200000
+Manager #705,4,80000
+Junior Consultant #420,2,50000
+Senior Consultant #102,3,60000
+Manager #1,4,80000
+Manager #526,4,80000
+Partner #541,7,200000
+Junior Consultant #826,2,50000
+Senior Partner #250,8,300000
+Manager #775,4,80000
+Senior Consultant #541,3,60000
+Region Manager #770,6,150000
+CEO #770,10,1000000
+C-level #784,9,500000
+Junior Consultant #402,2,50000
+Country Manager #442,5,110000
+Senior Partner #383,8,300000
+Manager #921,4,80000
+CEO #206,10,1000000
+Country Manager #895,5,110000
+Senior Consultant #826,3,60000
+CEO #139,10,1000000
+Senior Consultant #206,3,60000
+Region Manager #307,6,150000
+Junior Consultant #591,2,50000
+Business Analyst #552,1,45000
+Partner #322,7,200000
+CEO #821,10,1000000
+CEO #888,10,1000000
+Junior Consultant #320,2,50000
+Region Manager #6,6,150000
+Partner #671,7,200000
+Junior Consultant #393,2,50000
+Manager #455,4,80000
+Senior Consultant #112,3,60000
+Country Manager #808,5,110000
+Manager #821,4,80000
+Region Manager #788,6,150000
+CEO #31,10,1000000
+Country Manager #877,5,110000
+Region Manager #149,6,150000
+Country Manager #998,5,110000
+Senior Partner #282,8,300000
+Partner #435,7,200000
+Junior Consultant #348,2,50000
+Business Analyst #228,1,45000
+Region Manager #822,6,150000
+CEO #729,10,1000000
+Partner #618,7,200000
+Business Analyst #149,1,45000
+Senior Partner #263,8,300000
+CEO #113,10,1000000
+Business Analyst #344,1,45000
+Country Manager #557,5,110000
+Senior Consultant #900,3,60000
+C-level #773,9,500000
+Country Manager #948,5,110000
+Manager #637,4,80000
+CEO #256,10,1000000
+Region Manager #95,6,150000
+Country Manager #338,5,110000
+C-level #491,9,500000
+Junior Consultant #819,2,50000
+Junior Consultant #10,2,50000
+Junior Consultant #18,2,50000
+Senior Partner #231,8,300000
+CEO #519,10,1000000
+Junior Consultant #325,2,50000
+C-level #943,9,500000
+Country Manager #442,5,110000
+Senior Consultant #942,3,60000
+Junior Consultant #535,2,50000
+CEO #491,10,1000000
+Partner #728,7,200000
+Manager #782,4,80000
+Manager #763,4,80000
+Senior Partner #184,8,300000
+Manager #980,4,80000
+Senior Partner #969,8,300000
+Senior Consultant #32,3,60000
+C-level #547,9,500000
+Manager #173,4,80000
+Business Analyst #20,1,45000
+CEO #756,10,1000000
+Senior Consultant #663,3,60000
+Region Manager #575,6,150000
+Business Analyst #165,1,45000
+Manager #359,4,80000
+Partner #443,7,200000
+Region Manager #306,6,150000
+Manager #114,4,80000
+CEO #556,10,1000000
+C-level #309,9,500000
+Region Manager #729,6,150000
+CEO #857,10,1000000
+Senior Consultant #481,3,60000
+Manager #475,4,80000
+C-level #274,9,500000
+Country Manager #740,5,110000
+Senior Consultant #993,3,60000
+Region Manager #913,6,150000
+C-level #10,9,500000
+CEO #514,10,1000000
+Junior Consultant #377,2,50000
+C-level #946,9,500000
+C-level #21,9,500000
+Junior Consultant #95,2,50000
+CEO #155,10,1000000
+Partner #199,7,200000
+Senior Consultant #889,3,60000
+Senior Consultant #505,3,60000
+Senior Partner #248,8,300000
+CEO #682,10,1000000
+Junior Consultant #497,2,50000
+Region Manager #145,6,150000
+Junior Consultant #635,2,50000
+Junior Consultant #443,2,50000
+C-level #244,9,500000
+Senior Consultant #754,3,60000
+Manager #38,4,80000
+C-level #629,9,500000
+Region Manager #450,6,150000
+Business Analyst #967,1,45000
+Junior Consultant #965,2,50000
+Manager #125,4,80000
+Region Manager #424,6,150000
+Partner #661,7,200000
+Junior Consultant #998,2,50000
+Senior Partner #864,8,300000
+Business Analyst #564,1,45000
+Manager #397,4,80000
+Business Analyst #269,1,45000
+Manager #430,4,80000
+Junior Consultant #860,2,50000
+Senior Consultant #970,3,60000
+Junior Consultant #271,2,50000
+CEO #464,10,1000000
+Senior Consultant #342,3,60000
+Senior Consultant #743,3,60000
+Business Analyst #316,1,45000
+Junior Consultant #820,2,50000
+Junior Consultant #709,2,50000
+Business Analyst #332,1,45000
+CEO #466,10,1000000
+Senior Partner #854,8,300000
+C-level #272,9,500000
+Senior Partner #565,8,300000
+Partner #913,7,200000
+Senior Partner #215,8,300000
+Senior Consultant #423,3,60000
+Region Manager #828,6,150000
+Junior Consultant #274,2,50000
+Partner #83,7,200000
+Partner #55,7,200000
+Senior Consultant #863,3,60000
+Manager #840,4,80000
+Manager #21,4,80000
+Junior Consultant #78,2,50000
+Country Manager #542,5,110000
+Manager #853,4,80000
+Manager #416,4,80000
+C-level #214,9,500000
+CEO #566,10,1000000
+Junior Consultant #738,2,50000
+Business Analyst #583,1,45000
+Region Manager #331,6,150000
+Partner #892,7,200000
+Partner #500,7,200000
+Region Manager #879,6,150000
+Region Manager #180,6,150000
+Manager #199,4,80000
+Senior Consultant #900,3,60000
+Region Manager #357,6,150000
+Region Manager #214,6,150000
+Country Manager #345,5,110000
+Business Analyst #557,1,45000
+Partner #38,7,200000
+Country Manager #219,5,110000
+CEO #903,10,1000000
+Manager #932,4,80000
+Business Analyst #208,1,45000
+Senior Consultant #11,3,60000
+Manager #124,4,80000
+C-level #854,9,500000
+Country Manager #466,5,110000
+Senior Partner #140,8,300000
+Country Manager #447,5,110000
+Country Manager #920,5,110000
+Business Analyst #282,1,45000
+Manager #355,4,80000
+CEO #629,10,1000000
+CEO #425,10,1000000
+Senior Consultant #827,3,60000
+C-level #113,9,500000
+Business Analyst #203,1,45000
+Senior Partner #873,8,300000
+Region Manager #807,6,150000
+Business Analyst #797,1,45000
+CEO #681,10,1000000
+Country Manager #544,5,110000
+Junior Consultant #370,2,50000
+Partner #769,7,200000
+Country Manager #488,5,110000
+Partner #394,7,200000
+Country Manager #50,5,110000
+Senior Consultant #219,3,60000
+Country Manager #30,5,110000
+Country Manager #407,5,110000
+Partner #90,7,200000
+Country Manager #311,5,110000
+Partner #259,7,200000
+Partner #80,7,200000
+Junior Consultant #180,2,50000
+C-level #318,9,500000
+CEO #699,10,1000000
+Partner #746,7,200000
+CEO #356,10,1000000
+Senior Partner #738,8,300000
+Region Manager #238,6,150000
+C-level #4,9,500000
+C-level #869,9,500000
+Business Analyst #992,1,45000
+Manager #139,4,80000
+C-level #873,9,500000
+Country Manager #697,5,110000
+Business Analyst #796,1,45000
+Senior Consultant #382,3,60000
+Partner #469,7,200000
+Business Analyst #331,1,45000
+Senior Consultant #682,3,60000
+Partner #612,7,200000
+Partner #981,7,200000
+Business Analyst #47,1,45000
+Senior Consultant #136,3,60000
+Senior Consultant #426,3,60000
+CEO #211,10,1000000
+Senior Partner #989,8,300000
+C-level #34,9,500000
+Business Analyst #251,1,45000
+Senior Partner #783,8,300000
+Junior Consultant #679,2,50000
+Senior Partner #476,8,300000
+Country Manager #217,5,110000
+Junior Consultant #971,2,50000
+CEO #983,10,1000000
+Country Manager #302,5,110000
+Senior Partner #565,8,300000
+Country Manager #534,5,110000
+Manager #3,4,80000
+Junior Consultant #535,2,50000
+Junior Consultant #123,2,50000
+Junior Consultant #665,2,50000
+Manager #709,4,80000
+Region Manager #834,6,150000
+Partner #100,7,200000
+Senior Consultant #191,3,60000
+Country Manager #539,5,110000
+Country Manager #914,5,110000
+CEO #591,10,1000000
+C-level #803,9,500000
+C-level #24,9,500000
+CEO #670,10,1000000
+Region Manager #929,6,150000
+Country Manager #82,5,110000
+Senior Partner #871,8,300000
+Partner #631,7,200000
+Country Manager #449,5,110000
+Region Manager #759,6,150000
+Manager #143,4,80000
+Manager #469,4,80000
+Manager #200,4,80000
+Junior Consultant #718,2,50000
+Senior Partner #587,8,300000
+Senior Consultant #813,3,60000
+Region Manager #265,6,150000
+Senior Partner #255,8,300000
+Business Analyst #189,1,45000
+Senior Consultant #822,3,60000
+C-level #862,9,500000
+Senior Partner #29,8,300000
+Business Analyst #781,1,45000
+Senior Consultant #250,3,60000
+Senior Consultant #501,3,60000
+Junior Consultant #349,2,50000
+Manager #41,4,80000
+Partner #37,7,200000
+Senior Partner #450,8,300000
+Region Manager #4,6,150000
+C-level #350,9,500000
+C-level #825,9,500000
+Business Analyst #923,1,45000
+Partner #714,7,200000
+Junior Consultant #571,2,50000
+Partner #551,7,200000
+Region Manager #432,6,150000
+Junior Consultant #968,2,50000
+Partner #94,7,200000
+CEO #319,10,1000000
+CEO #419,10,1000000
+Business Analyst #118,1,45000
+Partner #239,7,200000
+Senior Partner #206,8,300000
+C-level #307,9,500000
+Senior Partner #735,8,300000
+CEO #415,10,1000000
+C-level #938,9,500000
+Manager #337,4,80000
+Senior Consultant #967,3,60000
+Senior Consultant #930,3,60000
+Senior Partner #958,8,300000
+Senior Consultant #497,3,60000
+Senior Partner #343,8,300000
+Partner #116,7,200000
+Senior Partner #12,8,300000
+C-level #359,9,500000
+Business Analyst #887,1,45000
+Manager #357,4,80000
+Junior Consultant #845,2,50000
+Senior Partner #276,8,300000
+Country Manager #503,5,110000
+CEO #455,10,1000000
+Region Manager #852,6,150000
+Country Manager #176,5,110000
+CEO #575,10,1000000
+Junior Consultant #130,2,50000
+C-level #731,9,500000
+Senior Consultant #800,3,60000
+Senior Consultant #435,3,60000
+CEO #185,10,1000000
+Senior Partner #409,8,300000
+C-level #664,9,500000
+Country Manager #647,5,110000
+Junior Consultant #500,2,50000
+Senior Partner #539,8,300000
+CEO #523,10,1000000
+C-level #142,9,500000
+C-level #289,9,500000
+Senior Consultant #951,3,60000
+Senior Consultant #5,3,60000
+CEO #67,10,1000000
+Partner #932,7,200000
+Region Manager #14,6,150000
+C-level #759,9,500000
+CEO #967,10,1000000
+CEO #383,10,1000000
+Region Manager #243,6,150000
+Manager #680,4,80000
+Country Manager #823,5,110000
+C-level #434,9,500000
+Partner #376,7,200000
+Business Analyst #516,1,45000
+Business Analyst #192,1,45000
+C-level #36,9,500000
+Senior Consultant #989,3,60000
+Senior Partner #813,8,300000
+Senior Partner #936,8,300000
+Business Analyst #935,1,45000
+Region Manager #354,6,150000
+Senior Consultant #533,3,60000
+Senior Partner #371,8,300000
+Partner #753,7,200000
+Manager #296,4,80000

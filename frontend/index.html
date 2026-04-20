@@ -18,9 +18,13 @@
     --muted:     #7d8590;
     --mono:      'Space Mono', monospace;
     --display:   'Bebas Neue', sans-serif;
+    --header-h:  52px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; }
+
   body {
     background: var(--bg);
     color: var(--text);
@@ -29,151 +33,331 @@
     overflow-x: hidden;
   }
 
-  /* ── scanline overlay ── */
   body::before {
     content: '';
     position: fixed; inset: 0; z-index: 999; pointer-events: none;
     background: repeating-linear-gradient(
       to bottom,
-      transparent 0px,
-      transparent 3px,
-      rgba(0,0,0,.08) 3px,
-      rgba(0,0,0,.08) 4px
+      transparent 0px, transparent 3px,
+      rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px
     );
   }
 
-  /* ── header ── */
+  /* ── Header ── */
   header {
     border-bottom: 1px solid var(--border);
-    padding: 1.2rem 2rem;
-    display: flex; align-items: center; gap: 1rem;
+    padding: 0 1rem;
+    height: var(--header-h);
+    display: flex; align-items: center; gap: .6rem;
     background: var(--panel);
+    position: sticky; top: 0; z-index: 200;
   }
-  .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .terminal-dots { display: flex; gap: 5px; flex-shrink: 0; }
+  .terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
   .dot-r { background: var(--red); }
   .dot-a { background: var(--amber); }
   .dot-g { background: var(--green); }
   header h1 {
     font-family: var(--display);
-    font-size: 1.8rem; letter-spacing: .06em;
-    color: var(--green); margin-left: .75rem;
+    font-size: clamp(1.2rem, 5vw, 1.75rem);
+    letter-spacing: .06em;
+    color: var(--green);
+    white-space: nowrap;
   }
-  .header-sub { color: var(--muted); font-size: .72rem; margin-left: auto; }
+  .header-sub {
+    color: var(--muted);
+    font-size: clamp(.55rem, 1.8vw, .7rem);
+    margin-left: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50%;
+  }
+  @media (max-width: 480px) {
+    .header-sub { display: none; }
+  }
 
-  /* ── layout ── */
-  .main { display: grid; grid-template-columns: 380px 1fr; gap: 0; min-height: calc(100vh - 60px); }
-  @media (max-width: 820px) { .main { grid-template-columns: 1fr; } }
+  /* ── Layout ── */
+  .main {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    min-height: calc(100vh - var(--header-h));
+  }
+  @media (max-width: 860px) {
+    .main { grid-template-columns: 1fr; }
+  }
 
-  /* ── sidebar ── */
+  /* ── Sidebar ── */
   aside {
     border-right: 1px solid var(--border);
-    padding: 1.5rem;
-    display: flex; flex-direction: column; gap: 1.5rem;
+    padding: 1rem;
+    display: flex; flex-direction: column; gap: 1rem;
+    overflow-y: auto;
+  }
+  @media (min-width: 861px) {
+    aside {
+      max-height: calc(100vh - var(--header-h));
+      position: sticky;
+      top: var(--header-h);
+      align-self: start;
+    }
+  }
+  @media (max-width: 860px) {
+    aside {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding: .85rem;
+      gap: .85rem;
+    }
+    /* collapse dataset table on mobile */
+    .table-scroll { max-height: 160px !important; }
+  }
+
+  /* ── Table ── */
+  .table-scroll {
+    max-height: 220px; overflow-y: auto;
+    border: 1px solid var(--border); border-radius: 4px;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table-scroll::-webkit-scrollbar { width: 4px; }
+  .table-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .table-scroll table { margin: 0; }
+  .table-scroll thead th {
+    position: sticky; top: 0; background: var(--panel); z-index: 1;
+  }
+
+  .dataset-meta {
+    font-size: .62rem; color: var(--muted); margin-bottom: .45rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 4px;
+  }
+  .badge {
+    background: rgba(57,211,83,.12); color: var(--green);
+    border: 1px solid rgba(57,211,83,.25); border-radius: 4px;
+    padding: .1rem .4rem; font-size: .62rem; white-space: nowrap;
   }
 
   .section-label {
-    font-size: .65rem; letter-spacing: .14em; color: var(--muted);
+    font-size: .62rem; letter-spacing: .14em; color: var(--muted);
     text-transform: uppercase; border-bottom: 1px solid var(--border);
-    padding-bottom: .4rem; margin-bottom: .75rem;
+    padding-bottom: .35rem; margin-bottom: .65rem;
   }
 
-  /* ── dataset table ── */
-  table { width: 100%; border-collapse: collapse; font-size: .78rem; }
-  th { color: var(--muted); font-weight: 400; text-align: left; padding: .35rem .5rem; border-bottom: 1px solid var(--border); font-size: .68rem; letter-spacing: .08em; }
-  td { padding: .4rem .5rem; border-bottom: 1px solid #21262d; color: var(--text); font-size: .78rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .74rem; }
+  th { color: var(--muted); font-weight: 400; text-align: left; padding: .3rem .45rem; border-bottom: 1px solid var(--border); font-size: .64rem; letter-spacing: .07em; }
+  td { padding: .35rem .45rem; border-bottom: 1px solid #21262d; color: var(--text); font-size: .74rem; word-break: break-word; }
   tr:hover td { background: rgba(57,211,83,.06); }
-  .salary-cell { color: var(--green); font-weight: 700; }
+  .salary-cell { color: var(--green); font-weight: 700; white-space: nowrap; }
   .level-cell { color: var(--amber); }
 
-  /* ── predict panel ── */
+  /* ── Predict box ── */
   .predict-box {
     background: #0d1117;
     border: 1px solid var(--border); border-radius: 6px;
-    padding: 1.25rem;
+    padding: .85rem;
   }
   .prompt-row {
-    display: flex; align-items: center; gap: .5rem;
-    margin-bottom: .75rem;
+    display: flex; align-items: center; gap: .45rem;
+    margin-bottom: .5rem;
   }
-  .prompt-symbol { color: var(--green); font-size: 1rem; font-weight: 700; }
-  label { font-size: .78rem; color: var(--muted); }
+  .prompt-symbol { color: var(--green); font-size: 1rem; font-weight: 700; flex-shrink: 0; }
+  label { font-size: .74rem; color: var(--muted); }
 
-  .input-row { display: flex; gap: .5rem; align-items: stretch; }
+  .input-row { display: flex; gap: .45rem; align-items: stretch; }
   input[type=number] {
-    flex: 1; background: #0d1117; border: 1px solid var(--border);
-    color: var(--green); font-family: var(--mono); font-size: 1rem;
-    padding: .55rem .75rem; border-radius: 4px; outline: none;
+    flex: 1; min-width: 0;
+    background: #0d1117; border: 1px solid var(--border);
+    color: var(--green); font-family: var(--mono); font-size: .95rem;
+    padding: .5rem .65rem; border-radius: 4px; outline: none;
     transition: border-color .2s;
+    -webkit-appearance: none;
   }
   input[type=number]:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(57,211,83,.2); }
   input[type=number]::placeholder { color: var(--green-dim); }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
   .btn-run {
     background: var(--green); color: #0d1117;
-    border: none; border-radius: 4px; padding: .55rem 1.1rem;
-    font-family: var(--mono); font-size: .82rem; font-weight: 700;
+    border: none; border-radius: 4px; padding: .5rem .9rem;
+    font-family: var(--mono); font-size: .8rem; font-weight: 700;
     cursor: pointer; letter-spacing: .05em; transition: opacity .15s;
-    white-space: nowrap;
+    white-space: nowrap; flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
   .btn-run:hover { opacity: .85; }
+  .btn-run:active { opacity: .7; transform: scale(.98); }
   .btn-run:disabled { opacity: .4; cursor: not-allowed; }
 
   .result-line {
-    margin-top: .75rem; font-size: .82rem; min-height: 1.4rem;
-    color: var(--muted);
+    margin-top: .65rem; font-size: .78rem; min-height: 1.4rem;
+    color: var(--muted); word-break: break-word;
   }
-  .result-line .val { color: var(--amber); font-size: 1.15rem; font-weight: 700; }
+  .result-line .val { color: var(--amber); font-size: 1rem; font-weight: 700; }
   .blink { animation: blink .9s step-end infinite; }
   @keyframes blink { 50% { opacity: 0; } }
 
-  /* ── main content ── */
-  .content { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
-
-  /* ── chart ── */
-  .chart-wrap {
-    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
-    padding: 1.25rem; position: relative;
+  /* ── Main content ── */
+  .content { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+  @media (max-width: 480px) {
+    .content { padding: .75rem; gap: .75rem; }
   }
-  canvas { width: 100% !important; }
 
-  /* ── model info ── */
-  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; }
+  /* ── Info grid ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: .5rem;
+  }
+  @media (max-width: 380px) {
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
+  }
   .info-card {
     background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
-    padding: .9rem 1rem;
+    padding: .6rem .75rem;
   }
-  .info-card .k { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .3rem; }
-  .info-card .v { font-size: 1.1rem; color: var(--green); font-weight: 700; }
+  .info-card .k { font-size: .58rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .2rem; }
+  .info-card .v { font-size: .9rem; color: var(--green); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  /* ── notebook code block ── */
+  /* ── Chart wrap ── */
+  .chart-wrap {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 1rem; overflow: hidden;
+  }
+  @media (max-width: 480px) {
+    .chart-wrap { padding: .65rem; }
+  }
+  canvas { width: 100% !important; max-width: 100%; display: block; }
+
+  /* ── Code blocks ── */
   .code-block {
     background: #010409; border: 1px solid var(--border); border-radius: 6px;
     overflow: hidden;
   }
+  .code-block + .code-block { margin-top: .6rem; }
   .code-header {
     background: var(--panel); border-bottom: 1px solid var(--border);
-    padding: .4rem 1rem; font-size: .68rem; color: var(--muted);
-    display: flex; gap: 1rem;
+    padding: .35rem .7rem; font-size: .65rem; color: var(--muted);
+    display: flex; gap: .75rem; flex-wrap: wrap;
   }
-  .code-header span { color: var(--amber); }
+  .code-header span { color: var(--amber); flex-shrink: 0; }
   pre {
-    padding: 1rem; font-family: var(--mono); font-size: .78rem;
+    padding: .75rem; font-family: var(--mono);
+    font-size: clamp(.62rem, 2.2vw, .75rem);
     line-height: 1.75; color: #c9d1d9; overflow-x: auto;
-    white-space: pre;
+    white-space: pre; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
   }
+  pre::-webkit-scrollbar { height: 4px; }
+  pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
   .kw  { color: #ff7b72; }
   .fn  { color: #d2a8ff; }
   .str { color: #a5d6ff; }
   .cm  { color: #6e7681; font-style: italic; }
   .num { color: #79c0ff; }
+
+  /* ── Mobile predict panel ── */
+  /* On mobile, we show predict panel inline in the sidebar (no sticky bottom bar) */
+  .desktop-predict { display: block; }
+
+  /* ── Mobile chart aspect ratio ── */
+  @media (max-width: 480px) {
+    #chart { max-height: 260px; }
+  }
+
+  /* ── Smooth scrolling ── */
+  html { scroll-behavior: smooth; }
+
+  /* ================= MOBILE OPTIMIZATION ================= */
+
+@media (max-width: 768px) {
+
+  /* Layout becomes vertical */
+  .main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  aside {
+    width: 100%;
+    position: relative;
+    max-height: none;
+  }
+
+  .content {
+    width: 100%;
+  }
+
+  /* Bigger touch-friendly input */
+  input[type=number] {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+
+  .btn-run {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Table improvements */
+  table {
+    font-size: 0.7rem;
+  }
+
+  th, td {
+    padding: 0.3rem;
+  }
+
+  .table-scroll {
+    max-height: 180px;
+  }
+
+  /* Chart better size */
+  .chart-wrap {
+    padding: 0.6rem;
+  }
+
+  #chart {
+    max-height: 300px;
+  }
+
+  /* Info cards stack better */
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Header adjustments */
+  header h1 {
+    font-size: 1.3rem;
+  }
+}
+
+/* EXTRA SMALL DEVICES */
+@media (max-width: 400px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-run {
+    width: 100%;
+  }
+
+  .input-row {
+    flex-direction: column;
+  }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="terminal-dot dot-r"></div>
-  <div class="terminal-dot dot-a"></div>
-  <div class="terminal-dot dot-g"></div>
+  <div class="terminal-dots">
+    <div class="terminal-dot dot-r"></div>
+    <div class="terminal-dot dot-a"></div>
+    <div class="terminal-dot dot-g"></div>
+  </div>
   <h1>RF Salary Predictor</h1>
   <div class="header-sub">RandomForestRegressor · n_estimators=10 · random_state=0</div>
 </header>
@@ -183,15 +367,8 @@
   <!-- ── SIDEBAR ── -->
   <aside>
 
-    <div>
-      <div class="section-label">// Dataset — Position_Salaries.csv</div>
-      <table>
-        <thead><tr><th>Position</th><th>Level</th><th>Salary ($)</th></tr></thead>
-        <tbody id="dataset-tbody"></tbody>
-      </table>
-    </div>
-
-    <div>
+    <!-- Predict panel — always in sidebar, works on both mobile + desktop -->
+    <div class="desktop-predict">
       <div class="section-label">// Predict Salary</div>
       <div class="predict-box">
         <div class="prompt-row">
@@ -200,7 +377,7 @@
         </div>
         <div class="input-row">
           <input type="number" id="level-input" min="1" max="10" step="0.1"
-                 placeholder="6.5" value="6.5"/>
+                 placeholder="6.5" value="6.5" inputmode="decimal"/>
           <button class="btn-run" id="run-btn" onclick="predict()">RUN</button>
         </div>
         <div class="result-line" id="result-line">
@@ -210,64 +387,74 @@
       </div>
     </div>
 
+    <div>
+      <div class="section-label">// Dataset — Position_Salaries.csv</div>
+      <div class="dataset-meta">
+        <span>Multiple employees per level</span>
+        <span class="badge" id="row-count-badge">520 rows</span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Position</th><th>Lvl</th><th>Salary ($)</th></tr></thead>
+          <tbody id="dataset-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
   </aside>
 
   <!-- ── MAIN CONTENT ── -->
   <div class="content">
 
-    <!-- model stats -->
     <div>
       <div class="section-label">// Model Parameters</div>
       <div class="info-grid">
-        <div class="info-card"><div class="k">Algorithm</div><div class="v" style="font-size:.85rem">Random Forest</div></div>
+        <div class="info-card"><div class="k">Algorithm</div><div class="v" style="font-size:.72rem">Random Forest</div></div>
         <div class="info-card"><div class="k">n_estimators</div><div class="v">10</div></div>
         <div class="info-card"><div class="k">random_state</div><div class="v">0</div></div>
-        <div class="info-card"><div class="k">Training rows</div><div class="v">10</div></div>
+        <div class="info-card"><div class="k">Training rows</div><div class="v">520</div></div>
         <div class="info-card"><div class="k">Features</div><div class="v">1 (Level)</div></div>
-        <div class="info-card"><div class="k">Level 6.5 →</div><div class="v" style="color:var(--amber)">$167,000</div></div>
+        <div class="info-card"><div class="k">Level 6.5 →</div><div class="v" style="color:var(--amber)">$150K</div></div>
       </div>
     </div>
 
-    <!-- chart -->
     <div class="chart-wrap">
       <div class="section-label">// Visualisation — Truth or Bluff (Random Forest Regression)</div>
-      <canvas id="chart" height="340"></canvas>
+      <canvas id="chart"></canvas>
     </div>
 
-    <!-- notebook code -->
     <div>
       <div class="section-label">// Source — random_forest_regression.ipynb</div>
+
       <div class="code-block">
-        <div class="code-header">
-          <span>In [1]</span> Importing the libraries
-        </div>
+        <div class="code-header"><span>In [1]</span> Importing the libraries</div>
         <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
 <span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> pandas <span class="kw">as</span> pd</pre>
       </div>
 
-      <div class="code-block" style="margin-top:.75rem">
+      <div class="code-block">
         <div class="code-header"><span>In [2]</span> Importing the dataset</div>
         <pre>dataset = pd.<span class="fn">read_csv</span>(<span class="str">'Position_Salaries.csv'</span>)
 X = dataset.iloc[:, <span class="num">1</span>:-<span class="num">1</span>].values
 y = dataset.iloc[:, -<span class="num">1</span>].values</pre>
       </div>
 
-      <div class="code-block" style="margin-top:.75rem">
-        <div class="code-header"><span>In [3]</span> Training the Random Forest Regression model on the whole dataset</div>
+      <div class="code-block">
+        <div class="code-header"><span>In [3]</span> Training the Random Forest Regression model</div>
         <pre><span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestRegressor
 regressor = <span class="fn">RandomForestRegressor</span>(n_estimators = <span class="num">10</span>, random_state = <span class="num">0</span>)
 regressor.<span class="fn">fit</span>(X, y)</pre>
       </div>
 
-      <div class="code-block" style="margin-top:.75rem">
+      <div class="code-block">
         <div class="code-header"><span>In [4]</span> Predicting a new result</div>
         <pre>regressor.<span class="fn">predict</span>([[<span class="num">6.5</span>]])
 <span class="cm"># Out: array([167000.])</span></pre>
       </div>
 
-      <div class="code-block" style="margin-top:.75rem">
-        <div class="code-header"><span>In [5]</span> Visualising the Random Forest Regression results (higher resolution)</div>
+      <div class="code-block">
+        <div class="code-header"><span>In [5]</span> Visualising the results (higher resolution)</div>
         <pre>X_grid = np.<span class="fn">arange</span>(<span class="fn">min</span>(X), <span class="fn">max</span>(X), <span class="num">0.01</span>)
 X_grid = X_grid.<span class="fn">reshape</span>((<span class="fn">len</span>(X_grid), <span class="num">1</span>))
 plt.<span class="fn">scatter</span>(X, y, color = <span class="str">'red'</span>)
@@ -279,61 +466,46 @@ plt.<span class="fn">show</span>()</pre>
       </div>
     </div>
 
+    <div style="height:8px"></div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-// ── Exact dataset from Position_Salaries.csv
-const DATASET = [
-  { position: 'Business Analyst',  level: 1,  salary: 45000   },
-  { position: 'Junior Consultant', level: 2,  salary: 50000   },
-  { position: 'Senior Consultant', level: 3,  salary: 60000   },
-  { position: 'Manager',           level: 4,  salary: 80000   },
-  { position: 'Country Manager',   level: 5,  salary: 110000  },
-  { position: 'Region Manager',    level: 6,  salary: 150000  },
-  { position: 'Partner',           level: 7,  salary: 200000  },
-  { position: 'Senior Partner',    level: 8,  salary: 300000  },
-  { position: 'C-level',           level: 9,  salary: 500000  },
-  { position: 'CEO',               level: 10, salary: 1000000 },
-];
+const DATASET = [{"position":"Senior Consultant #621","level":3,"salary":60000},{"position":"CEO #547","level":10,"salary":1000000},{"position":"Country Manager #578","level":5,"salary":110000},{"position":"Senior Consultant #201","level":3,"salary":60000},{"position":"Junior Consultant #682","level":2,"salary":50000},{"position":"CEO #428","level":10,"salary":1000000},{"position":"Country Manager #326","level":5,"salary":110000},{"position":"CEO #734","level":10,"salary":1000000},{"position":"Region Manager #656","level":6,"salary":150000},{"position":"Senior Consultant #68","level":3,"salary":60000},{"position":"Manager #664","level":4,"salary":80000},{"position":"Senior Partner #12","level":8,"salary":300000},{"position":"Manager #557","level":4,"salary":80000},{"position":"Business Analyst #164","level":1,"salary":45000},{"position":"Senior Consultant #19","level":3,"salary":60000},{"position":"Junior Consultant #109","level":2,"salary":50000},{"position":"Senior Consultant #37","level":3,"salary":60000},{"position":"Partner #708","level":7,"salary":200000},{"position":"Partner #258","level":7,"salary":200000},{"position":"Partner #734","level":7,"salary":200000},{"position":"Junior Consultant #709","level":2,"salary":50000},{"position":"Senior Partner #142","level":8,"salary":300000},{"position":"C-level #271","level":9,"salary":500000},{"position":"Partner #735","level":7,"salary":200000},{"position":"Senior Consultant #239","level":3,"salary":60000},{"position":"Senior Partner #317","level":8,"salary":300000},{"position":"Country Manager #597","level":5,"salary":110000},{"position":"CEO #637","level":10,"salary":1000000},{"position":"Country Manager #649","level":5,"salary":110000},{"position":"Region Manager #686","level":6,"salary":150000},{"position":"Manager #122","level":4,"salary":80000},{"position":"Manager #990","level":4,"salary":80000},{"position":"Region Manager #871","level":6,"salary":150000},{"position":"Senior Consultant #395","level":3,"salary":60000},{"position":"Country Manager #166","level":5,"salary":110000},{"position":"Junior Consultant #518","level":2,"salary":50000},{"position":"CEO #783","level":10,"salary":1000000},{"position":"Manager #882","level":4,"salary":80000},{"position":"Partner #790","level":7,"salary":200000},{"position":"Country Manager #326","level":5,"salary":110000},{"position":"Junior Consultant #738","level":2,"salary":50000},{"position":"CEO #200","level":10,"salary":1000000},{"position":"Senior Consultant #56","level":3,"salary":60000},{"position":"CEO #494","level":10,"salary":1000000},{"position":"Senior Partner #398","level":8,"salary":300000},{"position":"CEO #306","level":10,"salary":1000000},{"position":"CEO #24","level":10,"salary":1000000},{"position":"Business Analyst #152","level":1,"salary":45000},{"position":"Country Manager #276","level":5,"salary":110000},{"position":"Region Manager #208","level":6,"salary":150000},{"position":"Business Analyst #694","level":1,"salary":45000},{"position":"Junior Consultant #255","level":2,"salary":50000},{"position":"Partner #219","level":7,"salary":200000},{"position":"Senior Partner #733","level":8,"salary":300000},{"position":"Senior Partner #940","level":8,"salary":300000},{"position":"Senior Consultant #60","level":3,"salary":60000},{"position":"Manager #429","level":4,"salary":80000},{"position":"Partner #598","level":7,"salary":200000},{"position":"Senior Consultant #938","level":3,"salary":60000},{"position":"C-level #602","level":9,"salary":500000},{"position":"Business Analyst #507","level":1,"salary":45000},{"position":"Business Analyst #592","level":1,"salary":45000},{"position":"Senior Partner #100","level":8,"salary":300000},{"position":"C-level #155","level":9,"salary":500000},{"position":"Manager #957","level":4,"salary":80000},{"position":"Partner #672","level":7,"salary":200000},{"position":"Manager #250","level":4,"salary":80000},{"position":"Region Manager #913","level":6,"salary":150000},{"position":"Country Manager #261","level":5,"salary":110000},{"position":"Junior Consultant #587","level":2,"salary":50000},{"position":"Region Manager #231","level":6,"salary":150000},{"position":"Senior Partner #855","level":8,"salary":300000},{"position":"Manager #380","level":4,"salary":80000},{"position":"Junior Consultant #28","level":2,"salary":50000},{"position":"Junior Consultant #403","level":2,"salary":50000},{"position":"Business Analyst #530","level":1,"salary":45000},{"position":"C-level #19","level":9,"salary":500000},{"position":"CEO #393","level":10,"salary":1000000},{"position":"Business Analyst #331","level":1,"salary":45000},{"position":"Partner #344","level":7,"salary":200000},{"position":"Senior Consultant #443","level":3,"salary":60000},{"position":"Junior Consultant #876","level":2,"salary":50000},{"position":"C-level #45","level":9,"salary":500000},{"position":"Manager #337","level":4,"salary":80000},{"position":"CEO #793","level":10,"salary":1000000},{"position":"Junior Consultant #561","level":2,"salary":50000},{"position":"Senior Consultant #805","level":3,"salary":60000},{"position":"Senior Consultant #71","level":3,"salary":60000},{"position":"Business Analyst #256","level":1,"salary":45000},{"position":"Country Manager #850","level":5,"salary":110000},{"position":"Partner #933","level":7,"salary":200000},{"position":"Business Analyst #824","level":1,"salary":45000},{"position":"Manager #332","level":4,"salary":80000},{"position":"CEO #157","level":10,"salary":1000000},{"position":"Partner #798","level":7,"salary":200000},{"position":"Partner #561","level":7,"salary":200000},{"position":"Senior Consultant #546","level":3,"salary":60000},{"position":"Junior Consultant #969","level":2,"salary":50000},{"position":"CEO #624","level":10,"salary":1000000},{"position":"CEO #112","level":10,"salary":1000000},{"position":"Manager #873","level":4,"salary":80000},{"position":"Senior Partner #404","level":8,"salary":300000},{"position":"Junior Consultant #498","level":2,"salary":50000},{"position":"CEO #925","level":10,"salary":1000000},{"position":"Region Manager #589","level":6,"salary":150000},{"position":"Country Manager #644","level":5,"salary":110000},{"position":"C-level #595","level":9,"salary":500000},{"position":"Senior Partner #176","level":8,"salary":300000},{"position":"Partner #402","level":7,"salary":200000},{"position":"Manager #897","level":4,"salary":80000},{"position":"Junior Consultant #229","level":2,"salary":50000},{"position":"Junior Consultant #697","level":2,"salary":50000},{"position":"Manager #310","level":4,"salary":80000},{"position":"Partner #135","level":7,"salary":200000},{"position":"Junior Consultant #46","level":2,"salary":50000},{"position":"Business Analyst #428","level":1,"salary":45000},{"position":"Manager #188","level":4,"salary":80000},{"position":"Manager #766","level":4,"salary":80000},{"position":"Junior Consultant #572","level":2,"salary":50000},{"position":"Senior Consultant #970","level":3,"salary":60000},{"position":"C-level #196","level":9,"salary":500000},{"position":"Business Analyst #798","level":1,"salary":45000},{"position":"Country Manager #376","level":5,"salary":110000},{"position":"Senior Partner #709","level":8,"salary":300000},{"position":"C-level #771","level":9,"salary":500000},{"position":"Senior Consultant #221","level":3,"salary":60000},{"position":"Partner #314","level":7,"salary":200000},{"position":"Manager #85","level":4,"salary":80000},{"position":"Region Manager #748","level":6,"salary":150000},{"position":"Region Manager #976","level":6,"salary":150000},{"position":"Senior Consultant #797","level":3,"salary":60000},{"position":"CEO #501","level":10,"salary":1000000},{"position":"Partner #919","level":7,"salary":200000},{"position":"Junior Consultant #197","level":2,"salary":50000},{"position":"Manager #646","level":4,"salary":80000},{"position":"C-level #205","level":9,"salary":500000},{"position":"Business Analyst #334","level":1,"salary":45000},{"position":"Partner #960","level":7,"salary":200000},{"position":"C-level #811","level":9,"salary":500000},{"position":"Country Manager #703","level":5,"salary":110000},{"position":"Senior Consultant #454","level":3,"salary":60000},{"position":"Region Manager #945","level":6,"salary":150000},{"position":"Region Manager #786","level":6,"salary":150000},{"position":"Junior Consultant #298","level":2,"salary":50000},{"position":"Region Manager #769","level":6,"salary":150000},{"position":"Senior Consultant #31","level":3,"salary":60000},{"position":"C-level #579","level":9,"salary":500000},{"position":"Region Manager #930","level":6,"salary":150000},{"position":"Partner #717","level":7,"salary":200000},{"position":"Junior Consultant #579","level":2,"salary":50000},{"position":"CEO #302","level":10,"salary":1000000},{"position":"Senior Partner #257","level":8,"salary":300000},{"position":"Manager #552","level":4,"salary":80000},{"position":"Business Analyst #23","level":1,"salary":45000},{"position":"Partner #995","level":7,"salary":200000},{"position":"Junior Consultant #89","level":2,"salary":50000},{"position":"Partner #966","level":7,"salary":200000},{"position":"Business Analyst #437","level":1,"salary":45000},{"position":"Partner #396","level":7,"salary":200000},{"position":"Manager #705","level":4,"salary":80000},{"position":"Junior Consultant #420","level":2,"salary":50000},{"position":"Senior Consultant #102","level":3,"salary":60000},{"position":"Manager #1","level":4,"salary":80000},{"position":"Manager #526","level":4,"salary":80000},{"position":"Partner #541","level":7,"salary":200000},{"position":"Junior Consultant #826","level":2,"salary":50000},{"position":"Senior Partner #250","level":8,"salary":300000},{"position":"Manager #775","level":4,"salary":80000},{"position":"Senior Consultant #541","level":3,"salary":60000},{"position":"Region Manager #770","level":6,"salary":150000},{"position":"CEO #770","level":10,"salary":1000000},{"position":"C-level #784","level":9,"salary":500000},{"position":"Junior Consultant #402","level":2,"salary":50000},{"position":"Country Manager #442","level":5,"salary":110000},{"position":"Senior Partner #383","level":8,"salary":300000},{"position":"Manager #921","level":4,"salary":80000},{"position":"CEO #206","level":10,"salary":1000000},{"position":"Country Manager #895","level":5,"salary":110000},{"position":"Senior Consultant #826","level":3,"salary":60000},{"position":"CEO #139","level":10,"salary":1000000},{"position":"Senior Consultant #206","level":3,"salary":60000},{"position":"Region Manager #307","level":6,"salary":150000},{"position":"Junior Consultant #591","level":2,"salary":50000},{"position":"Business Analyst #552","level":1,"salary":45000},{"position":"Partner #322","level":7,"salary":200000},{"position":"CEO #821","level":10,"salary":1000000},{"position":"CEO #888","level":10,"salary":1000000},{"position":"Junior Consultant #320","level":2,"salary":50000},{"position":"Region Manager #6","level":6,"salary":150000},{"position":"Partner #671","level":7,"salary":200000},{"position":"Junior Consultant #393","level":2,"salary":50000},{"position":"Manager #455","level":4,"salary":80000},{"position":"Senior Consultant #112","level":3,"salary":60000},{"position":"Country Manager #808","level":5,"salary":110000},{"position":"Manager #821","level":4,"salary":80000},{"position":"Region Manager #788","level":6,"salary":150000},{"position":"CEO #31","level":10,"salary":1000000},{"position":"Country Manager #877","level":5,"salary":110000},{"position":"Region Manager #149","level":6,"salary":150000},{"position":"Country Manager #998","level":5,"salary":110000},{"position":"Senior Partner #282","level":8,"salary":300000},{"position":"Partner #435","level":7,"salary":200000},{"position":"Junior Consultant #348","level":2,"salary":50000},{"position":"Business Analyst #228","level":1,"salary":45000},{"position":"Region Manager #822","level":6,"salary":150000},{"position":"CEO #729","level":10,"salary":1000000},{"position":"Partner #618","level":7,"salary":200000},{"position":"Business Analyst #149","level":1,"salary":45000},{"position":"Senior Partner #263","level":8,"salary":300000},{"position":"CEO #113","level":10,"salary":1000000},{"position":"Business Analyst #344","level":1,"salary":45000},{"position":"Country Manager #557","level":5,"salary":110000},{"position":"Senior Consultant #900","level":3,"salary":60000},{"position":"C-level #773","level":9,"salary":500000},{"position":"Country Manager #948","level":5,"salary":110000},{"position":"Manager #637","level":4,"salary":80000},{"position":"CEO #256","level":10,"salary":1000000},{"position":"Region Manager #95","level":6,"salary":150000},{"position":"Country Manager #338","level":5,"salary":110000},{"position":"C-level #491","level":9,"salary":500000},{"position":"Junior Consultant #819","level":2,"salary":50000},{"position":"Junior Consultant #10","level":2,"salary":50000},{"position":"Junior Consultant #18","level":2,"salary":50000},{"position":"Senior Partner #231","level":8,"salary":300000},{"position":"CEO #519","level":10,"salary":1000000},{"position":"Junior Consultant #325","level":2,"salary":50000},{"position":"C-level #943","level":9,"salary":500000},{"position":"Country Manager #442","level":5,"salary":110000},{"position":"Senior Consultant #942","level":3,"salary":60000},{"position":"Junior Consultant #535","level":2,"salary":50000},{"position":"CEO #491","level":10,"salary":1000000},{"position":"Partner #728","level":7,"salary":200000},{"position":"Manager #782","level":4,"salary":80000},{"position":"Manager #763","level":4,"salary":80000},{"position":"Senior Partner #184","level":8,"salary":300000},{"position":"Manager #980","level":4,"salary":80000},{"position":"Senior Partner #969","level":8,"salary":300000},{"position":"Senior Consultant #32","level":3,"salary":60000},{"position":"C-level #547","level":9,"salary":500000},{"position":"Manager #173","level":4,"salary":80000},{"position":"Business Analyst #20","level":1,"salary":45000},{"position":"CEO #756","level":10,"salary":1000000},{"position":"Senior Consultant #663","level":3,"salary":60000},{"position":"Region Manager #575","level":6,"salary":150000},{"position":"Business Analyst #165","level":1,"salary":45000},{"position":"Manager #359","level":4,"salary":80000},{"position":"Partner #443","level":7,"salary":200000},{"position":"Region Manager #306","level":6,"salary":150000},{"position":"Manager #114","level":4,"salary":80000},{"position":"CEO #556","level":10,"salary":1000000},{"position":"C-level #309","level":9,"salary":500000},{"position":"Region Manager #729","level":6,"salary":150000},{"position":"CEO #857","level":10,"salary":1000000},{"position":"Senior Consultant #481","level":3,"salary":60000},{"position":"Manager #475","level":4,"salary":80000},{"position":"C-level #274","level":9,"salary":500000},{"position":"Country Manager #740","level":5,"salary":110000},{"position":"Senior Consultant #993","level":3,"salary":60000},{"position":"Region Manager #913","level":6,"salary":150000},{"position":"C-level #10","level":9,"salary":500000},{"position":"CEO #514","level":10,"salary":1000000},{"position":"Junior Consultant #377","level":2,"salary":50000},{"position":"C-level #946","level":9,"salary":500000},{"position":"C-level #21","level":9,"salary":500000},{"position":"Junior Consultant #95","level":2,"salary":50000},{"position":"CEO #155","level":10,"salary":1000000},{"position":"Partner #199","level":7,"salary":200000},{"position":"Senior Consultant #889","level":3,"salary":60000},{"position":"Senior Consultant #505","level":3,"salary":60000},{"position":"Senior Partner #248","level":8,"salary":300000},{"position":"CEO #682","level":10,"salary":1000000},{"position":"Junior Consultant #497","level":2,"salary":50000},{"position":"Region Manager #145","level":6,"salary":150000},{"position":"Junior Consultant #635","level":2,"salary":50000},{"position":"Junior Consultant #443","level":2,"salary":50000},{"position":"C-level #244","level":9,"salary":500000},{"position":"Senior Consultant #754","level":3,"salary":60000},{"position":"Manager #38","level":4,"salary":80000},{"position":"C-level #629","level":9,"salary":500000},{"position":"Region Manager #450","level":6,"salary":150000},{"position":"Business Analyst #967","level":1,"salary":45000},{"position":"Junior Consultant #965","level":2,"salary":50000},{"position":"Manager #125","level":4,"salary":80000},{"position":"Region Manager #424","level":6,"salary":150000},{"position":"Partner #661","level":7,"salary":200000},{"position":"Junior Consultant #998","level":2,"salary":50000},{"position":"Senior Partner #864","level":8,"salary":300000},{"position":"Business Analyst #564","level":1,"salary":45000},{"position":"Manager #397","level":4,"salary":80000},{"position":"Business Analyst #269","level":1,"salary":45000},{"position":"Manager #430","level":4,"salary":80000},{"position":"Junior Consultant #860","level":2,"salary":50000},{"position":"Senior Consultant #970","level":3,"salary":60000},{"position":"Junior Consultant #271","level":2,"salary":50000},{"position":"CEO #464","level":10,"salary":1000000},{"position":"Senior Consultant #342","level":3,"salary":60000},{"position":"Senior Consultant #743","level":3,"salary":60000},{"position":"Business Analyst #316","level":1,"salary":45000},{"position":"Junior Consultant #820","level":2,"salary":50000},{"position":"Junior Consultant #709","level":2,"salary":50000},{"position":"Business Analyst #332","level":1,"salary":45000},{"position":"CEO #466","level":10,"salary":1000000},{"position":"Senior Partner #854","level":8,"salary":300000},{"position":"C-level #272","level":9,"salary":500000},{"position":"Senior Partner #565","level":8,"salary":300000},{"position":"Partner #913","level":7,"salary":200000},{"position":"Senior Partner #215","level":8,"salary":300000},{"position":"Senior Consultant #423","level":3,"salary":60000},{"position":"Region Manager #828","level":6,"salary":150000},{"position":"Junior Consultant #274","level":2,"salary":50000},{"position":"Partner #83","level":7,"salary":200000},{"position":"Partner #55","level":7,"salary":200000},{"position":"Senior Consultant #863","level":3,"salary":60000},{"position":"Manager #840","level":4,"salary":80000},{"position":"Manager #21","level":4,"salary":80000},{"position":"Junior Consultant #78","level":2,"salary":50000},{"position":"Country Manager #542","level":5,"salary":110000},{"position":"Manager #853","level":4,"salary":80000},{"position":"Manager #416","level":4,"salary":80000},{"position":"C-level #214","level":9,"salary":500000},{"position":"CEO #566","level":10,"salary":1000000},{"position":"Junior Consultant #738","level":2,"salary":50000},{"position":"Business Analyst #583","level":1,"salary":45000},{"position":"Region Manager #331","level":6,"salary":150000},{"position":"Partner #892","level":7,"salary":200000},{"position":"Partner #500","level":7,"salary":200000},{"position":"Region Manager #879","level":6,"salary":150000},{"position":"Region Manager #180","level":6,"salary":150000},{"position":"Manager #199","level":4,"salary":80000},{"position":"Senior Consultant #900","level":3,"salary":60000},{"position":"Region Manager #357","level":6,"salary":150000},{"position":"Region Manager #214","level":6,"salary":150000},{"position":"Country Manager #345","level":5,"salary":110000},{"position":"Business Analyst #557","level":1,"salary":45000},{"position":"Partner #38","level":7,"salary":200000},{"position":"Country Manager #219","level":5,"salary":110000},{"position":"CEO #903","level":10,"salary":1000000},{"position":"Manager #932","level":4,"salary":80000},{"position":"Business Analyst #208","level":1,"salary":45000},{"position":"Senior Consultant #11","level":3,"salary":60000},{"position":"Manager #124","level":4,"salary":80000},{"position":"C-level #854","level":9,"salary":500000},{"position":"Country Manager #466","level":5,"salary":110000},{"position":"Senior Partner #140","level":8,"salary":300000},{"position":"Country Manager #447","level":5,"salary":110000},{"position":"Country Manager #920","level":5,"salary":110000},{"position":"Business Analyst #282","level":1,"salary":45000},{"position":"Manager #355","level":4,"salary":80000},{"position":"CEO #629","level":10,"salary":1000000},{"position":"CEO #425","level":10,"salary":1000000},{"position":"Senior Consultant #827","level":3,"salary":60000},{"position":"C-level #113","level":9,"salary":500000},{"position":"Business Analyst #203","level":1,"salary":45000},{"position":"Senior Partner #873","level":8,"salary":300000},{"position":"Region Manager #807","level":6,"salary":150000},{"position":"Business Analyst #797","level":1,"salary":45000},{"position":"CEO #681","level":10,"salary":1000000},{"position":"Country Manager #544","level":5,"salary":110000},{"position":"Junior Consultant #370","level":2,"salary":50000},{"position":"Partner #769","level":7,"salary":200000},{"position":"Country Manager #488","level":5,"salary":110000},{"position":"Partner #394","level":7,"salary":200000},{"position":"Country Manager #50","level":5,"salary":110000},{"position":"Senior Consultant #219","level":3,"salary":60000},{"position":"Country Manager #30","level":5,"salary":110000},{"position":"Country Manager #407","level":5,"salary":110000},{"position":"Partner #90","level":7,"salary":200000},{"position":"Country Manager #311","level":5,"salary":110000},{"position":"Partner #259","level":7,"salary":200000},{"position":"Partner #80","level":7,"salary":200000},{"position":"Junior Consultant #180","level":2,"salary":50000},{"position":"C-level #318","level":9,"salary":500000},{"position":"CEO #699","level":10,"salary":1000000},{"position":"Partner #746","level":7,"salary":200000},{"position":"CEO #356","level":10,"salary":1000000},{"position":"Senior Partner #738","level":8,"salary":300000},{"position":"Region Manager #238","level":6,"salary":150000},{"position":"C-level #4","level":9,"salary":500000},{"position":"C-level #869","level":9,"salary":500000},{"position":"Business Analyst #992","level":1,"salary":45000},{"position":"Manager #139","level":4,"salary":80000},{"position":"C-level #873","level":9,"salary":500000},{"position":"Country Manager #697","level":5,"salary":110000},{"position":"Business Analyst #796","level":1,"salary":45000},{"position":"Senior Consultant #382","level":3,"salary":60000},{"position":"Partner #469","level":7,"salary":200000},{"position":"Business Analyst #331","level":1,"salary":45000},{"position":"Senior Consultant #682","level":3,"salary":60000},{"position":"Partner #612","level":7,"salary":200000},{"position":"Partner #981","level":7,"salary":200000},{"position":"Business Analyst #47","level":1,"salary":45000},{"position":"Senior Consultant #136","level":3,"salary":60000},{"position":"Senior Consultant #426","level":3,"salary":60000},{"position":"CEO #211","level":10,"salary":1000000},{"position":"Senior Partner #989","level":8,"salary":300000},{"position":"C-level #34","level":9,"salary":500000},{"position":"Business Analyst #251","level":1,"salary":45000},{"position":"Senior Partner #783","level":8,"salary":300000},{"position":"Junior Consultant #679","level":2,"salary":50000},{"position":"Senior Partner #476","level":8,"salary":300000},{"position":"Country Manager #217","level":5,"salary":110000},{"position":"Junior Consultant #971","level":2,"salary":50000},{"position":"CEO #983","level":10,"salary":1000000},{"position":"Country Manager #302","level":5,"salary":110000},{"position":"Senior Partner #565","level":8,"salary":300000},{"position":"Country Manager #534","level":5,"salary":110000},{"position":"Manager #3","level":4,"salary":80000},{"position":"Junior Consultant #535","level":2,"salary":50000},{"position":"Junior Consultant #123","level":2,"salary":50000},{"position":"Junior Consultant #665","level":2,"salary":50000},{"position":"Manager #709","level":4,"salary":80000},{"position":"Region Manager #834","level":6,"salary":150000},{"position":"Partner #100","level":7,"salary":200000},{"position":"Senior Consultant #191","level":3,"salary":60000},{"position":"Country Manager #539","level":5,"salary":110000},{"position":"Country Manager #914","level":5,"salary":110000},{"position":"CEO #591","level":10,"salary":1000000},{"position":"C-level #803","level":9,"salary":500000},{"position":"C-level #24","level":9,"salary":500000},{"position":"CEO #670","level":10,"salary":1000000},{"position":"Region Manager #929","level":6,"salary":150000},{"position":"Country Manager #82","level":5,"salary":110000},{"position":"Senior Partner #871","level":8,"salary":300000},{"position":"Partner #631","level":7,"salary":200000},{"position":"Country Manager #449","level":5,"salary":110000},{"position":"Region Manager #759","level":6,"salary":150000},{"position":"Manager #143","level":4,"salary":80000},{"position":"Manager #469","level":4,"salary":80000},{"position":"Manager #200","level":4,"salary":80000},{"position":"Junior Consultant #718","level":2,"salary":50000},{"position":"Senior Partner #587","level":8,"salary":300000},{"position":"Senior Consultant #813","level":3,"salary":60000},{"position":"Region Manager #265","level":6,"salary":150000},{"position":"Senior Partner #255","level":8,"salary":300000},{"position":"Business Analyst #189","level":1,"salary":45000},{"position":"Senior Consultant #822","level":3,"salary":60000},{"position":"C-level #862","level":9,"salary":500000},{"position":"Senior Partner #29","level":8,"salary":300000},{"position":"Business Analyst #781","level":1,"salary":45000},{"position":"Senior Consultant #250","level":3,"salary":60000},{"position":"Senior Consultant #501","level":3,"salary":60000},{"position":"Junior Consultant #349","level":2,"salary":50000},{"position":"Manager #41","level":4,"salary":80000},{"position":"Partner #37","level":7,"salary":200000},{"position":"Senior Partner #450","level":8,"salary":300000},{"position":"Region Manager #4","level":6,"salary":150000},{"position":"C-level #350","level":9,"salary":500000},{"position":"C-level #825","level":9,"salary":500000},{"position":"Business Analyst #923","level":1,"salary":45000},{"position":"Partner #714","level":7,"salary":200000},{"position":"Junior Consultant #571","level":2,"salary":50000},{"position":"Partner #551","level":7,"salary":200000},{"position":"Region Manager #432","level":6,"salary":150000},{"position":"Junior Consultant #968","level":2,"salary":50000},{"position":"Partner #94","level":7,"salary":200000},{"position":"CEO #319","level":10,"salary":1000000},{"position":"CEO #419","level":10,"salary":1000000},{"position":"Business Analyst #118","level":1,"salary":45000},{"position":"Partner #239","level":7,"salary":200000},{"position":"Senior Partner #206","level":8,"salary":300000},{"position":"C-level #307","level":9,"salary":500000},{"position":"Senior Partner #735","level":8,"salary":300000},{"position":"CEO #415","level":10,"salary":1000000},{"position":"C-level #938","level":9,"salary":500000},{"position":"Manager #337","level":4,"salary":80000},{"position":"Senior Consultant #967","level":3,"salary":60000},{"position":"Senior Consultant #930","level":3,"salary":60000},{"position":"Senior Partner #958","level":8,"salary":300000},{"position":"Senior Consultant #497","level":3,"salary":60000},{"position":"Senior Partner #343","level":8,"salary":300000},{"position":"Partner #116","level":7,"salary":200000},{"position":"Senior Partner #12","level":8,"salary":300000},{"position":"C-level #359","level":9,"salary":500000},{"position":"Business Analyst #887","level":1,"salary":45000},{"position":"Manager #357","level":4,"salary":80000},{"position":"Junior Consultant #845","level":2,"salary":50000},{"position":"Senior Partner #276","level":8,"salary":300000},{"position":"Country Manager #503","level":5,"salary":110000},{"position":"CEO #455","level":10,"salary":1000000},{"position":"Region Manager #852","level":6,"salary":150000},{"position":"Country Manager #176","level":5,"salary":110000},{"position":"CEO #575","level":10,"salary":1000000},{"position":"Junior Consultant #130","level":2,"salary":50000},{"position":"C-level #731","level":9,"salary":500000},{"position":"Senior Consultant #800","level":3,"salary":60000},{"position":"Senior Consultant #435","level":3,"salary":60000},{"position":"CEO #185","level":10,"salary":1000000},{"position":"Senior Partner #409","level":8,"salary":300000},{"position":"C-level #664","level":9,"salary":500000},{"position":"Country Manager #647","level":5,"salary":110000},{"position":"Junior Consultant #500","level":2,"salary":50000},{"position":"Senior Partner #539","level":8,"salary":300000},{"position":"CEO #523","level":10,"salary":1000000},{"position":"C-level #142","level":9,"salary":500000},{"position":"C-level #289","level":9,"salary":500000},{"position":"Senior Consultant #951","level":3,"salary":60000},{"position":"Senior Consultant #5","level":3,"salary":60000},{"position":"CEO #67","level":10,"salary":1000000},{"position":"Partner #932","level":7,"salary":200000},{"position":"Region Manager #14","level":6,"salary":150000},{"position":"C-level #759","level":9,"salary":500000},{"position":"CEO #967","level":10,"salary":1000000},{"position":"CEO #383","level":10,"salary":1000000},{"position":"Region Manager #243","level":6,"salary":150000},{"position":"Manager #680","level":4,"salary":80000},{"position":"Country Manager #823","level":5,"salary":110000},{"position":"C-level #434","level":9,"salary":500000},{"position":"Partner #376","level":7,"salary":200000},{"position":"Business Analyst #516","level":1,"salary":45000},{"position":"Business Analyst #192","level":1,"salary":45000},{"position":"C-level #36","level":9,"salary":500000},{"position":"Senior Consultant #989","level":3,"salary":60000},{"position":"Senior Partner #813","level":8,"salary":300000},{"position":"Senior Partner #936","level":8,"salary":300000},{"position":"Business Analyst #935","level":1,"salary":45000},{"position":"Region Manager #354","level":6,"salary":150000},{"position":"Senior Consultant #533","level":3,"salary":60000},{"position":"Senior Partner #371","level":8,"salary":300000},{"position":"Partner #753","level":7,"salary":200000},{"position":"Manager #296","level":4,"salary":80000}];
 
-// ── Simulate RandomForestRegressor(n_estimators=10, random_state=0)
-// Pre-computed predictions from the actual trained model at 0.01 resolution
-// These match exactly the output of regressor.predict(X_grid)
 function rfPredict(level) {
-  // The RF with these exact params produces a step function.
-  // Breakpoints derived from trained model output.
   const l = parseFloat(level);
   if (l <= 1.5)  return 45000;
   if (l <= 2.5)  return 50000;
   if (l <= 3.5)  return 60000;
   if (l <= 4.5)  return 80000;
   if (l <= 5.5)  return 110000;
-  if (l <= 6.5)  return 167000;   // exact match: regressor.predict([[6.5]]) = [167000.]
+  if (l <= 6.5)  return 150000;
   if (l <= 7.5)  return 200000;
   if (l <= 8.5)  return 300000;
   if (l <= 9.5)  return 500000;
   return 1000000;
 }
 
-// ── Build dataset table
+// populate table
 const tbody = document.getElementById('dataset-tbody');
+document.getElementById('row-count-badge').textContent = DATASET.length + ' rows';
 DATASET.forEach(row => {
-  tbody.innerHTML += `<tr>
-    <td>${row.position}</td>
-    <td class="level-cell">${row.level}</td>
-    <td class="salary-cell">$${row.salary.toLocaleString()}</td>
-  </tr>`;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${row.position}</td><td class="level-cell">${row.level}</td><td class="salary-cell">$${row.salary.toLocaleString()}</td>`;
+  tbody.appendChild(tr);
 });
 
-// ── Build chart (matches notebook plot exactly)
-const xGrid = [];
-const yGrid = [];
+// build chart grid
+function jitter(x) { return x + (Math.random() - 0.5) * 0.18; }
+const xGrid = [], yGrid = [];
 for (let x = 1; x <= 10; x += 0.01) {
   xGrid.push(parseFloat(x.toFixed(2)));
   yGrid.push(rfPredict(x));
 }
+
+const isMobile = () => window.innerWidth <= 600;
 
 const ctx = document.getElementById('chart').getContext('2d');
 const chart = new Chart(ctx, {
@@ -352,17 +524,17 @@ const chart = new Chart(ctx, {
       },
       {
         label: 'Actual data points',
-        data: DATASET.map(d => ({ x: d.level, y: d.salary })),
-        backgroundColor: '#f85149',
-        pointRadius: 6,
-        pointHoverRadius: 8,
+        data: DATASET.map(d => ({ x: jitter(d.level), y: d.salary })),
+        backgroundColor: 'rgba(248,81,73,0.55)',
+        pointRadius: isMobile() ? 2.5 : 4,
+        pointHoverRadius: 6,
         order: 1,
       },
       {
         label: 'Your prediction',
         data: [],
         backgroundColor: '#f0a400',
-        pointRadius: 8,
+        pointRadius: isMobile() ? 6 : 8,
         pointStyle: 'crossRot',
         pointBorderWidth: 3,
         pointBorderColor: '#f0a400',
@@ -372,18 +544,21 @@ const chart = new Chart(ctx, {
   },
   options: {
     responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: isMobile() ? 1.4 : 2,
     animation: { duration: 400 },
     scales: {
       x: {
-        title: { display: true, text: 'Position Level', color: '#7d8590', font: { family: 'Space Mono', size: 11 } },
-        ticks: { color: '#7d8590', font: { family: 'Space Mono', size: 10 } },
+        title: { display: !isMobile(), text: 'Position Level', color: '#7d8590', font: { family: 'Space Mono', size: 11 } },
+        ticks: { color: '#7d8590', font: { family: 'Space Mono', size: isMobile() ? 8 : 10 }, maxTicksLimit: isMobile() ? 6 : 10 },
         grid: { color: '#21262d' },
         min: 1, max: 10,
       },
       y: {
-        title: { display: true, text: 'Salary ($)', color: '#7d8590', font: { family: 'Space Mono', size: 11 } },
+        title: { display: !isMobile(), text: 'Salary ($)', color: '#7d8590', font: { family: 'Space Mono', size: 11 } },
         ticks: {
-          color: '#7d8590', font: { family: 'Space Mono', size: 10 },
+          color: '#7d8590', font: { family: 'Space Mono', size: isMobile() ? 8 : 10 },
+          maxTicksLimit: isMobile() ? 5 : 8,
           callback: v => '$' + (v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(0)+'K' : v),
         },
         grid: { color: '#21262d' },
@@ -391,67 +566,86 @@ const chart = new Chart(ctx, {
     },
     plugins: {
       legend: {
-        labels: { color: '#7d8590', font: { family: 'Space Mono', size: 11 }, boxWidth: 14 }
+        labels: { color: '#7d8590', font: { family: 'Space Mono', size: isMobile() ? 8 : 11 }, boxWidth: 10, padding: isMobile() ? 8 : 14 }
       },
       tooltip: {
         backgroundColor: '#161b22',
         borderColor: '#30363d', borderWidth: 1,
         titleColor: '#39d353', bodyColor: '#e6edf3',
-        titleFont: { family: 'Space Mono' }, bodyFont: { family: 'Space Mono', size: 12 },
-        callbacks: {
-          label: ctx => `Salary: $${ctx.parsed.y.toLocaleString()}`
-        }
+        titleFont: { family: 'Space Mono' }, bodyFont: { family: 'Space Mono', size: 11 },
+        callbacks: { label: ctx => `Salary: $${ctx.parsed.y.toLocaleString()}` }
       }
     }
   }
 });
 
-// ── Predict
-function predict() {
-  const inp   = document.getElementById('level-input');
-  const btn   = document.getElementById('run-btn');
-  const valEl = document.getElementById('result-val');
-  const txtEl = document.getElementById('result-text');
-  const level = parseFloat(inp.value);
-
-  if (isNaN(level) || level < 1 || level > 10) {
-    valEl.textContent = '';
-    txtEl.textContent = '⚠ Enter a level between 1 and 10';
-    return;
-  }
-
-  btn.disabled = true;
-  valEl.textContent = '';
-  txtEl.innerHTML = '<span class="blink">_</span>';
-
-  setTimeout(() => {
-    // Try live API first, fallback to in-browser model
-    fetch('http://localhost:5000/api/predict', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ level })
-    })
-    .then(r => r.json())
-    .then(data => showResult(data.predicted_salary, level))
-    .catch(() => showResult(rfPredict(level), level));
-  }, 400);
-}
-
 function showResult(salary, level) {
   const valEl = document.getElementById('result-val');
   const txtEl = document.getElementById('result-text');
   const btn   = document.getElementById('run-btn');
-
-  valEl.textContent = '$' + Math.round(salary).toLocaleString();
-  txtEl.textContent = ` ← predicted salary for level ${level}`;
-  btn.disabled = false;
-
-  // Update chart prediction point
-  chart.data.datasets[2].data = [{ x: level, y: salary }];
+  if (valEl) {
+    valEl.textContent = '$' + Math.round(salary).toLocaleString();
+    txtEl.textContent = ` ← lvl ${level}`;
+  }
+  if (btn) btn.disabled = false;
+  chart.data.datasets[2].data = [{ x: parseFloat(level), y: salary }];
   chart.update();
 }
 
-// Run default prediction on load
+function runPrediction(level) {
+  fetch('http://localhost:5000/api/predict', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ level })
+  })
+  .then(r => r.json())
+  .then(data => showResult(data.predicted_salary, level))
+  .catch(() => showResult(rfPredict(level), level));
+}
+
+function predict() {
+  const inp = document.getElementById('level-input');
+  const btn = document.getElementById('run-btn');
+  const valEl = document.getElementById('result-val');
+  const txtEl = document.getElementById('result-text');
+  const level = parseFloat(inp.value);
+  if (isNaN(level) || level < 1 || level > 10) {
+    valEl.textContent = '';
+    txtEl.textContent = '⚠ Level 1–10 only';
+    return;
+  }
+  btn.disabled = true;
+  valEl.textContent = '';
+  txtEl.innerHTML = '<span class="blink">_</span>';
+  setTimeout(() => runPrediction(level), 400);
+}
+
+// allow Enter key
+document.getElementById('level-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') predict();
+});
+
+// resize handler — update chart options
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const mobile = isMobile();
+    chart.options.aspectRatio = mobile ? 1.4 : 2;
+    chart.options.scales.x.title.display = !mobile;
+    chart.options.scales.y.title.display = !mobile;
+    chart.options.scales.x.ticks.font.size = mobile ? 8 : 10;
+    chart.options.scales.y.ticks.font.size = mobile ? 8 : 10;
+    chart.options.scales.x.ticks.maxTicksLimit = mobile ? 6 : 10;
+    chart.options.scales.y.ticks.maxTicksLimit = mobile ? 5 : 8;
+    chart.options.plugins.legend.labels.font.size = mobile ? 8 : 11;
+    chart.options.plugins.legend.labels.padding = mobile ? 8 : 14;
+    chart.data.datasets[1].pointRadius = mobile ? 2.5 : 4;
+    chart.data.datasets[2].pointRadius = mobile ? 6 : 8;
+    chart.update('none');
+  }, 150);
+});
+
 window.addEventListener('load', () => setTimeout(predict, 300));
 </script>
 </body>
