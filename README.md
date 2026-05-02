@@ -1,10 +1,13 @@
-# Random Forest Regression — Salary Predictor
+# Salary Predictor - Predictive Analytics Application 
+![Cover Image](./assets/salary-cover.png)
 
-> Predictive Analytics Application | Term Submission
 
 Built using the exact code from `random_forest_regression.ipynb` and the `Position_Salaries.csv` dataset.
 
 ---
+
+## Deployed Link - https://salary-prediction-rf.netlify.app/
+> Wait for couple of minutes when using for the first time
 
 ## 📁 Project Structure
 
