@@ -95,7 +95,7 @@ curl -X POST http://localhost:5000/api/predict \
   -d '{"level": 6.5}'
 ```
 ```json
-{ "level": 6.5, "predicted_salary": 167000.0 }
+{ "level": 6.5, "predicted_salary": 167000.00 }
 ```
 
 ---
