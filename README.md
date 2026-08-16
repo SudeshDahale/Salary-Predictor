@@ -1,17 +1,17 @@
 # Salary Predictor
 
-A tool to predict salaries based on job position.
+A Python-based application for predicting salaries based on input data.
 
 ## Overview
 
-Salary Predictor is a Python-based application designed to provide salary predictions based on various job positions. The project is structured as a monolith, incorporating backend services for model training and prediction, a frontend user interface, and a data module containing the necessary datasets for training purposes. Additionally, it includes pre-trained machine learning models for enhanced performance.
+The Salary Predictor leverages machine learning models to predict salaries based on various input parameters such as position. It consists of a monolithic architecture that includes a backend service for business logic, a frontend user interface for data input and prediction outputs, and a structured dataset for training and validation. Users can easily interact with the system to obtain salary predictions accurately.
 
 ## Features
 
-- User interface for inputting job position details.
-- Model training functionality to improve salary prediction accuracy.
-- Storage of trained machine learning models for quick access.
-- Support for multiple datasets for diverse job positions.
+- Backend service for handling business logic and API interaction.
+- User-friendly frontend for data input and displaying predictions.
+- Trained machine learning models for accurate salary predictions.
+- Structured dataset for training and validating the prediction model.
 
 ## Quick Start
 
@@ -24,7 +24,7 @@ python backend/app.py
 
 ## Architecture
 
-The application is organized into four main modules: the backend for processing logic and serving predictions, the frontend for the user interface, a data module for datasets used in training, and a models directory holding the trained machine learning models. This monolithic structure enables streamlined development and deployment.
+The application utilizes a monolithic architecture where the frontend communicates with the backend service, which in turn handles the interactions with the machine learning models and the dataset. This centralized approach ensures efficient data flow and management throughout the prediction process.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
