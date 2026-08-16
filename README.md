@@ -1,18 +1,17 @@
 # Salary Predictor
 
-A Python-based application for predicting salaries based on job positions.
+A machine learning application for predicting salaries based on job position and features.
 
 ## Overview
 
-Salary Predictor is a monolithic application designed to provide salary predictions using machine learning techniques. The application consists of a backend service that handles the application logic, a frontend interface for user interaction, and a data storage module that keeps the datasets required for training the model. Trained models and their metadata are stored in a model repository, and visual assets are managed for the application interface.
+Salary Predictor is a Python-based monolithic application designed to predict salaries using machine learning algorithms. It includes modules for model training, a user-friendly web interface, and the main application logic to provide accurate salary estimates based on predefined input features. This project enables users to make informed salary decisions by leveraging trained machine learning models.
 
 ## Features
 
-- Backend service for processing user requests and serving predictions
-- User-friendly frontend interface for salary prediction input
-- Data storage for datasets used in training machine learning models
-- Model repository containing trained models and metadata
-- Assets management for visual elements such as cover images
+- Predicts salaries based on various input features.
+- Includes a machine learning model training module.
+- User-friendly web interface for easy interactions.
+- Supports a variety of job positions through customizable input.
 
 ## Quick Start
 
@@ -25,7 +24,7 @@ python backend/app.py
 
 ## Architecture
 
-The Salary Predictor features a monolithic architecture where the backend service houses the core application logic and interfaces with both the data storage where training sets are kept and the model repository that stores trained models. The frontend interface allows users to access the prediction functionality, while asset management handles the visual elements of the application.
+The architecture of the Salary Predictor is monolithic, consisting of a main application to handle salary prediction, a dedicated module for training the machine learning model, and a web interface that allows users to input data and receive predictions.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
