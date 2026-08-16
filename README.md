@@ -1,22 +1,23 @@
 # Salary Predictor
 
-A web application for predicting salaries based on user input.
+A machine learning application for predicting salaries based on job positions.
 
 ## Overview
 
-Salary Predictor is a Python-based web application designed to forecast salaries for various positions using machine learning techniques. It combines a user-friendly interface, robust model training, and efficient data storage to provide accurate salary predictions. Users can input their details and receive an immediate salary estimate using a trained model.
+The Salary Predictor is a Python-based application that enables users to input job position data and receive salary predictions using machine learning models. It is composed of several modules, including a frontend for user interaction, a backend for processing and model training, and organized data storage for managing datasets and model metadata.
 
 ## Features
 
-- User-friendly web interface for inputting data and receiving predictions.
-- Supervised learning model for accurate salary forecasting.
-- Data storage for datasets and model binaries.
-- Training module for developing predictive models using real-world datasets.
+- User-friendly interface for salary prediction input
+- Backend processing and model training capabilities
+- Utilization of machine learning models for accurate predictions
+- Storage for datasets and trained model information
+- Includes visual assets for enhanced user experience
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/SudeshDahale/Salary-Predictor.git
+git clone https://github.com/SudeshDahale/Salary-Predictor
 cd Salary-Predictor
 pip install -r backend/requirements.txt
 python backend/app.py
@@ -24,7 +25,7 @@ python backend/app.py
 
 ## Architecture
 
-The application is structured as a monolith, integrating the user interface, model training, and data storage into a single cohesive unit. The frontend serves as the entry point for users, while the backend manages model training and data handling.
+This application follows a monolithic architecture, with the frontend providing a user interface to input data, while the backend processes this data, trains the necessary models, and serves predictions. The application also organizes its data and models for efficient access and management.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
