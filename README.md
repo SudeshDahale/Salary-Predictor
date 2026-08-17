@@ -1,17 +1,18 @@
 # Salary Predictor
 
-A monolithic application for predicting salaries based on job position and experience.
+A Python-based application for predicting salaries based on job positions.
 
 ## Overview
 
-Salary Predictor is a Python-based application designed to estimate salary ranges for various job positions. Utilizing machine learning models, the application serves predictions through a user-friendly interface. The architecture is monolithic, where frontend, backend, data storage, and models are encapsulated within a single codebase, maintaining simplicity in development and deployment.
+Salary Predictor is a monolithic application designed to predict salaries using historical data. It leverages a backend API to handle predictions, a user interface for user interactions, and a data store for model training. The application integrates a trained machine learning model, providing users with quick and accurate salary predictions based on their job inputs.
 
 ## Features
 
-- Predict salaries based on user-inputted job position and experience level.
-- Utilizes trained machine learning models for accurate predictions.
-- Includes a user-friendly interface for seamless interaction.
-- Supports CSV data import for model training and predictions.
+- User-friendly interface for salary input
+- Efficient salary prediction using a trained model
+- Data storage for position salary information
+- Easy to train the model with updated datasets
+- Comprehensive documentation and guided setup
 
 ## Quick Start
 
@@ -24,7 +25,7 @@ python backend/app.py
 
 ## Architecture
 
-The Salary Predictor consists of a monolithic architecture where the frontend serves the user interface, while the backend handles application logic and model inference. The data module manages data storage for both training and making predictions, and the models module contains pre-trained models that are utilized by the backend for generating salary predictions.
+The application follows a monolithic architecture, where the User Interface interacts with the Salary Prediction API to provide real-time predictions. The backend service communicates with the Data Store, leveraging the dataset to train the predictive model, which is then utilized to forecast salaries based on user input.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
