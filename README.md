@@ -1,18 +1,17 @@
 # Salary Predictor
 
-A machine learning-based application for predicting salaries based on job position.
+A monolithic application for predicting salaries based on job position and experience.
 
 ## Overview
 
-This project provides a comprehensive solution for predicting salaries using a trained machine learning model. It comprises a backend API that processes user requests, a frontend interface that displays the results, and a model storage system that retains the trained model. The application captures inputs from users and delivers salary predictions based on various job positions using historical datasets.
+Salary Predictor is a Python-based application designed to estimate salary ranges for various job positions. Utilizing machine learning models, the application serves predictions through a user-friendly interface. The architecture is monolithic, where frontend, backend, data storage, and models are encapsulated within a single codebase, maintaining simplicity in development and deployment.
 
 ## Features
 
-- Machine learning model to predict salaries based on job positions.
-- User-friendly frontend interface for input and output display.
-- Backend API that efficiently handles requests and responses.
-- Storage for trained models to enable quick predictions.
-- Utilizes datasets for training derived from historical salary data.
+- Predict salaries based on user-inputted job position and experience level.
+- Utilizes trained machine learning models for accurate predictions.
+- Includes a user-friendly interface for seamless interaction.
+- Supports CSV data import for model training and predictions.
 
 ## Quick Start
 
@@ -25,7 +24,7 @@ python backend/app.py
 
 ## Architecture
 
-The application is built as a monolith, comprising several integrated modules: a backend API for processing requests and predictions, a frontend interface for user interaction, model storage for retaining machine learning models, a data repository containing training datasets, and assets providing visual resources.
+The Salary Predictor consists of a monolithic architecture where the frontend serves the user interface, while the backend handles application logic and model inference. The data module manages data storage for both training and making predictions, and the models module contains pre-trained models that are utilized by the backend for generating salary predictions.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
