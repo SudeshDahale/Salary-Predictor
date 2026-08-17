@@ -1,18 +1,17 @@
 # Salary Predictor
 
-A Python-based application for predicting salaries based on job positions.
+A machine learning application for predicting salaries based on various features.
 
 ## Overview
 
-Salary Predictor is a monolithic application designed to predict salaries using historical data. It leverages a backend API to handle predictions, a user interface for user interactions, and a data store for model training. The application integrates a trained machine learning model, providing users with quick and accurate salary predictions based on their job inputs.
+The Salary Predictor is a comprehensive application designed to assist users in estimating salaries for different positions using machine learning models. Built with a Python backend and a user-friendly frontend, this monolithic architecture integrates data processing, model training, and prediction functionalities into a single cohesive application. The project leverages historical data to train models and provide accurate salary forecasts based on user inputs.
 
 ## Features
 
-- User-friendly interface for salary input
-- Efficient salary prediction using a trained model
-- Data storage for position salary information
-- Easy to train the model with updated datasets
-- Comprehensive documentation and guided setup
+- Interactive user interface for salary predictions.
+- Robust machine learning models for accurate salary estimation.
+- Support for various job positions through data-driven insights.
+- Simple setup and easy-to-use command line commands for installation and execution.
 
 ## Quick Start
 
@@ -25,7 +24,7 @@ python backend/app.py
 
 ## Architecture
 
-The application follows a monolithic architecture, where the User Interface interacts with the Salary Prediction API to provide real-time predictions. The backend service communicates with the Data Store, leveraging the dataset to train the predictive model, which is then utilized to forecast salaries based on user input.
+The Salary Predictor is structured as a monolith, comprising a frontend module that handles user interactions, a backend module for processing predictions and managing model interactions, a models module for storing the trained machine learning models, a data module that contains the training and evaluation datasets, and an assets module for the visual and static resources used by the frontend.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
