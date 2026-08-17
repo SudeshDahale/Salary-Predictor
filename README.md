@@ -1,17 +1,18 @@
 # Salary Predictor
 
-A machine learning application for predicting salaries based on job position and features.
+A machine learning-based application for predicting salaries based on job position.
 
 ## Overview
 
-Salary Predictor is a Python-based monolithic application designed to predict salaries using machine learning algorithms. It includes modules for model training, a user-friendly web interface, and the main application logic to provide accurate salary estimates based on predefined input features. This project enables users to make informed salary decisions by leveraging trained machine learning models.
+This project provides a comprehensive solution for predicting salaries using a trained machine learning model. It comprises a backend API that processes user requests, a frontend interface that displays the results, and a model storage system that retains the trained model. The application captures inputs from users and delivers salary predictions based on various job positions using historical datasets.
 
 ## Features
 
-- Predicts salaries based on various input features.
-- Includes a machine learning model training module.
-- User-friendly web interface for easy interactions.
-- Supports a variety of job positions through customizable input.
+- Machine learning model to predict salaries based on job positions.
+- User-friendly frontend interface for input and output display.
+- Backend API that efficiently handles requests and responses.
+- Storage for trained models to enable quick predictions.
+- Utilizes datasets for training derived from historical salary data.
 
 ## Quick Start
 
@@ -24,7 +25,7 @@ python backend/app.py
 
 ## Architecture
 
-The architecture of the Salary Predictor is monolithic, consisting of a main application to handle salary prediction, a dedicated module for training the machine learning model, and a web interface that allows users to input data and receive predictions.
+The application is built as a monolith, comprising several integrated modules: a backend API for processing requests and predictions, a frontend interface for user interaction, model storage for retaining machine learning models, a data repository containing training datasets, and assets providing visual resources.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
