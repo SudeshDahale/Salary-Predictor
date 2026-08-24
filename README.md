@@ -1,18 +1,17 @@
 # Salary Predictor
 
-A machine learning model to predict salaries based on various job positions.
+Predict salaries based on position and experience using machine learning.
 
 ## Overview
 
-The Salary Predictor project leverages machine learning algorithms to accurately predict salaries for different job roles. It includes a model training module which processes salary datasets to train a regression model, and a user interface that allows users to interact with the model and visualize results. Built in Python, this monolithic application integrates data processing, model training, and user-facing components seamlessly.
+The Salary Predictor project employs machine learning techniques to estimate salaries based on various input features like job position and experience level. The system is structured as a monolithic application, combining model training, user interface, and data storage components to deliver a seamless user experience. Utilizing Python for backend processing and a web-based frontend, the application provides users with intuitive interaction for salary predictions.
 
 ## Features
 
-- Machine learning-based salary predictions using random forest regression
-- User-friendly interface for input and displaying predicted results
-- Model training module that saves trained models for future predictions
-- Built-in dataset for demonstrating predictions
-- Easy installation and setup for running the application locally
+- Predict salaries for various job positions
+- Train machine learning models on historical salary data
+- User-friendly web interface for input and output
+- Store and manage trained models and metadata
 
 ## Quick Start
 
@@ -25,7 +24,7 @@ python app.py
 
 ## Architecture
 
-The project is structured as a monolith, integrating model training and user interface components within a single application. The backend handles the core logic, including training the model and predictions, while the frontend facilitates user interactions through an intuitive web interface.
+The application is structured as a monolith encompassing three major modules: Model Training, User Interface, and Data Storage. The Model Training module is responsible for developing machine learning models using input data, while the User Interface module handles user interactions and displays the predictions. The Data Storage module manages trained model files and relevant metadata for efficient retrieval and use.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
