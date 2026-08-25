@@ -1,71 +1,45 @@
-# Salary-Predictor Technical Architecture Guide
+# Technical Architecture Guide – Salary-Predictor
 
 ## System Overview
-The Salary-Predictor repository implements a monolithic, API‑first system for predicting job salaries based on input features such as job position and experience. The system consists of a Flask backend that serves a REST prediction endpoint and a static frontend UI for user interaction. Model training is performed offline via a Python script, producing a pickled scikit‑learn RandomForestRegressor stored under the models directory. Historical salary data resides in a CSV file and is used both for training and optional reference during inference.
-
-Key components include:
-- **frontend/index.html** (HTML/CSS/JS) – static UI.
-- **backend/app.py** – Flask application exposing `/predict` endpoint.
-- **backend/train_model.py** – script that reads `data/Position_Salaries.csv`, trains a RandomForestRegressor, and serialises it to `models/rf_regressor.pkl`.
-- **models/rf_regressor.pkl** – serialized model used at runtime.
-- **models/metadata.json** – model metadata (e.g., training date, feature list).
-- **data/Position_Salaries.csv** – source dataset.
-
-The architecture is deliberately simple to enable rapid prototyping while maintaining a clear separation between UI, API, and model artifacts.
-
-
+The Salary-Predictor repository implements a monolithic, API‑first web application that predicts salary ranges for software positions. The backend is a Flask service that exposes a single prediction endpoint. It loads a pre‑trained Random Forest model (persisted as `models/rf_regressor.pkl`) and uses pandas for request parsing and response formatting. Model training is performed offline by `backend/train_model.py` using scikit‑learn and the CSV data in `data/Position_Salaries.csv`. A static HTML/JavaScript frontend (`frontend/index.html`) collects job attributes, calls the prediction API, and displays the result. All components live in a single repository and are packaged together for simple deployment.
 
 ## System Layers
 ### Presentation Layer
-**Technologies:** HTML, CSS, JavaScript
+**Technologies:** HTML, JavaScript, CSS
 
-Static web UI built with HTML, CSS, and JavaScript that collects user inputs and displays predictions. Files: `frontend/index.html` and associated assets.
+Static web assets (HTML, CSS, JavaScript) served directly from the Flask static route or a simple web server. Handles user input and displays predictions.
 
 ### API Layer
 **Technologies:** Python, Flask
 
-Flask application exposing a RESTful `/predict` endpoint. Handles request parsing, validation, model loading, and response formatting. Core file: `backend/app.py`.
+Flask application (`backend/app.py`) exposing HTTP endpoints. Routes request payloads to the service layer and returns JSON responses.
 
-### Model Layer
-**Technologies:** scikit-learn, Pickle
-
-Encapsulates the trained scikit‑learn RandomForestRegressor. The model artifact (`models/rf_regressor.pkl`) is loaded lazily by the API. Model metadata lives in `models/metadata.json`.
-
-### Data Layer
-**Technologies:** CSV
-
-Source CSV dataset (`data/Position_Salaries.csv`) used for offline training and optional reference during inference. No runtime database is required; the dataset is read only during training.
-
-### Training Layer
+### Service & Model Layer
 **Technologies:** Python, scikit-learn, pandas
 
-Standalone script (`backend/train_model.py`) that implements the data preprocessing, model training, evaluation, and serialization steps. Executed manually or via CI/CD to update the model.
+Loads the persisted Random Forest regressor (`models/rf_regressor.pkl`) at startup. Performs data validation, feature engineering (if any), and invokes the model for inference.
+
+### Training & Data Layer
+**Technologies:** Python, pandas, scikit-learn, Jupyter Notebook (`random_forest_regression.ipynb`)
+
+Offline script (`backend/train_model.py`) reads raw salary data (`data/Position_Salaries.csv`), trains a Random Forest regressor, serializes the model to `models/rf_regressor.pkl`, and writes metadata (`models/metadata.json`).
 
 
 
 ## Data Flow & Pipelines
-1. **User Interaction** – The user opens `frontend/index.html` in a browser, enters job details (e.g., position, years of experience) and clicks *Predict*.
-2. **Client Request** – JavaScript code captures the form data and sends a JSON POST request to the Flask endpoint defined in `backend/app.py` (`/predict`).
-3. **API Layer** – `app.py` parses the request, validates inputs, and loads the serialized model (`models/rf_regressor.pkl`) if not already in memory.
-4. **Inference** – The model receives the feature vector, performs prediction using scikit‑learn's `RandomForestRegressor.predict`, and returns a salary estimate.
-5. **Response** – `app.py` wraps the prediction in a JSON response and sends it back to the browser.
-6. **Presentation** – The frontend JavaScript receives the JSON payload, extracts the salary value, and updates the UI to display the predicted salary.
-
-**Training Pipeline** (offline):
-- `backend/train_model.py` reads `data/Position_Salaries.csv`, performs preprocessing (encoding categorical columns, scaling if needed), splits data, trains a `RandomForestRegressor`, evaluates performance, writes the model to `models/rf_regressor.pkl`, and records metadata to `models/metadata.json`.
-
+1. **User Interaction** – The user opens `frontend/index.html` in a browser and fills the job‑attribute form. 2. **API Call** – JavaScript sends an HTTP POST request to `/predict` (implemented in `backend/app.py`). 3. **Request Handling** – Flask parses the JSON payload, converts it into a pandas DataFrame, and forwards the data to the loaded Random Forest model. 4. **Prediction** – The model (`rf_regressor.pkl`) computes a salary estimate, which Flask returns as JSON. 5. **Result Rendering** – The frontend receives the JSON response and updates the UI with the predicted salary.
 
 ## Key Design Decisions
-- Monolithic layout keeps deployment simple – a single Flask process serves both static assets (if configured) and the prediction API.
-- API‑first approach ensures the prediction logic is decoupled from the UI, allowing future clients (mobile, CLI) to reuse the endpoint without UI changes.
-- Pickle is used for model serialization for speed and ease of integration with scikit‑learn; the repository stores the artifact under `models/` and loads it at runtime.
-- RandomForestRegressor was chosen for its robustness to non‑linear relationships and minimal feature scaling requirements, reducing preprocessing complexity.
-- No external database is introduced; the CSV dataset suffices for training, keeping the stack lightweight.
+- Monolithic repository – all code (backend, frontend, model artifacts) lives in a single Git repo, simplifying versioning and deployment.
+- API‑First approach – the Flask app exposes a single `/predict` endpoint, allowing the same API to be consumed by the HTML frontend or any future client.
+- Model persistence with `pickle` – the trained Random Forest model is serialized to `models/rf_regressor.pkl` for fast loading at runtime.
+- Separation of training and inference – `train_model.py` is an explicit script, keeping the inference service lightweight.
+- Minimal external dependencies – only Flask, pandas, scikit-learn, and their transitive packages are listed in `backend/requirements.txt`.
 
 ## Scalability & Reliability
-Because the current design runs as a single Flask process, scalability is limited to vertical scaling (more CPU/RAM) or simple process replication behind a reverse proxy (e.g., gunicorn + Nginx). To handle higher request volumes:
-- Deploy the Flask app with a production WSGI server (gunicorn) and configure multiple worker processes.
-- Cache the loaded model in memory to avoid repeated disk I/O.
-- Separate static assets onto a CDN or serve them directly from a web server, reducing load on the Flask process.
-- If future feature expansion requires model versioning or A/B testing, consider extracting the Model Layer into a dedicated microservice exposing gRPC/REST, allowing independent scaling.
-
+The current monolith is sufficient for low‑to‑moderate traffic (e.g., prototype or internal use). To scale:
+- **Horizontal scaling**: Containerize the Flask app (Docker) and run multiple instances behind a load balancer. Because the model is loaded in memory, each replica can serve predictions independently.
+- **Model serving separation**: Extract the inference logic into a dedicated model‑serving microservice (e.g., TensorFlow Serving, TorchServe, or a FastAPI wrapper) to reduce latency and enable zero‑downtime model updates.
+- **Caching**: Introduce an in‑memory cache (Redis) for repeated identical requests.
+- **Asynchronous processing**: For batch predictions, add a task queue (Celery) and worker processes.
+- **Data pipeline**: Automate periodic retraining by scheduling `train_model.py` via cron or CI/CD, then replace `rf_regressor.pkl` without downtime.
