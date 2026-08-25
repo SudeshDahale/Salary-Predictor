@@ -1,18 +1,18 @@
 # Salary Predictor
 
-Predict employee salaries using a trained Random Forest model via a Flask API and web UI.
+Predict software engineer salaries using a trained Random Forest model via a simple Flask API and web UI.
 
 ## Overview
 
-The Salary Predictor project combines a data pipeline, model training, and a Flask‑based prediction service with a simple static web interface. Raw salary data from `data/Position_Salaries.csv` is ingested, used to train a Random Forest regression model (`backend/train_model.py`), and the trained model is serialized to `models/rf_regressor.pkl`. The Flask API (`backend/app.py`) loads this pickle, exposes a `/predict` endpoint, and the front‑end (`frontend/index.html`) collects user input and displays the predicted salary.
+This repository provides an end‑to‑end salary prediction service built with Python, Flask, and scikit‑learn. Raw salary data is ingested from a CSV, a Random Forest regressor is trained and persisted, and a Flask API serves predictions to a static HTML frontend. The project follows a monolithic, API‑first architecture, keeping model training, serving, and UI in a single codebase for easy deployment and experimentation.
 
 ## Features
 
-- Data ingestion from CSV with optional re‑training capability
-- Random Forest regression model training and serialization to a pickle file
-- Flask API that loads the serialized model and returns salary predictions in JSON
-- Static HTML/CSS/JS front‑end for interactive salary prediction
-- All dependencies declared in `backend/requirements.txt` for reproducible environment
+- Data ingestion from `data/Position_Salaries.csv` using pandas.
+- Model training script (`backend/train_model.py`) that builds a RandomForestRegressor and saves it to `models/rf_regressor.pkl` with accompanying metadata.
+- Flask API (`backend/app.py`) that loads the pickled model and exposes a `/predict` endpoint returning JSON predictions.
+- Responsive static frontend (`frontend/index.html`) that collects user inputs and calls the `/predict` endpoint via JavaScript.
+- Requirements pinning in `backend/requirements.txt` for reproducible environments.
 
 ## Quick Start
 
@@ -22,28 +22,29 @@ The Salary Predictor project combines a data pipeline, model training, and a Fla
 git clone https://github.com/SudeshDahale/Salary-Predictor.git
 cd Salary-Predictor
 
-# Set up Python virtual environment
-python -m venv venv
-source venv/bin/activate   # On Windows use `venv\Scripts\activate`
+# Set up a Python virtual environment
+python3 -m venv venv
+source venv/bin/activate   # on Windows use `venv\Scripts\activate`
 
 # Install backend dependencies
 pip install -r backend/requirements.txt
 
-# (Optional) Retrain the model – will overwrite models/rf_regressor.pkl
+# (Optional) Train the model from scratch
 python backend/train_model.py
 
-# Start the Flask prediction service
-python backend/app.py
-# The API will be available at http://127.0.0.1:5000
+# Start the Flask API server
+export FLASK_APP=backend/app.py
+flask run   # defaults to http://127.0.0.1:5000
 
-# Open the UI in a browser
-open frontend/index.html   # or manually open the file in any browser
+# Open the frontend UI in a browser
+# The HTML page uses the running API at http://127.0.0.1:5000/predict
+open frontend/index.html   # macOS; use `xdg-open` on Linux or double‑click the file on Windows
 ```
 ```
 
 ## Architecture
 
-The application follows a monolithic, API‑first design. Core components—data ingestion, model training, and the Flask prediction service—reside in the `backend` package and share the same runtime. The front‑end is a static web page that communicates with the Flask API via HTTP, keeping the UI decoupled while preserving a single deployable unit.
+Monolithic, API‑First design: a single Flask application (`backend/app.py`) hosts the prediction endpoint, loads the pre‑trained RandomForest model (`models/rf_regressor.pkl`), and serves static assets from the `frontend/` directory. Data ingestion and model training live in the same repository, enabling a straightforward end‑to‑end workflow from raw CSV to live predictions.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
