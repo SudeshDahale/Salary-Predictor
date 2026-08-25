@@ -1,33 +1,33 @@
-# Salary Predictor    … … 
+# Salary Predictor API Reference
 
 **Base URL:** `http://localhost:5000`  
 **Authentication:** None
 
 ## Overview
-API for      …  …  ... ... ...
+The Salary Predictor API provides a single prediction endpoint that loads a pre‑trained RandomForestRegressor model and returns salary estimates for given job parameters. It runs on Flask and serves a static frontend for user interaction.
 
 ## Endpoints
-### `GET` /health
-Get health status of the service
+### `POST` /predict
+Predict salary based on input features such as job position, years of experience, and location.
 
 **Parameters / Payload:**
-None
+JSON body with fields: position (string), years_experience (numeric), location (string, optional)
 
 **Response:**
 ```json
-JSON with status message
+JSON object containing predicted_salary (float) and model_version (string).
 ```
 
 ---
-### `POST` /predict
-Predict salary based on input features
+### `GET` /health
+Health check endpoint to verify the API is running.
 
 **Parameters / Payload:**
-JSON payload with required features (e.g., "years_experience", "education_level", "city")
+
 
 **Response:**
 ```json
-JSON with predicted salary
+JSON object with status: 'OK' and timestamp.
 ```
 
 ---
@@ -36,6 +36,6 @@ JSON with predicted salary
 ## Error Codes
 | Code | Meaning |
 | :--- | :--- |
-| `400` | Bad Request: Missing or invalid input |
-| `500` | None |
+| `400` | Bad Request – missing or malformed input data. |
+| `500` | Internal Server Error – model loading or prediction failure. |
 
