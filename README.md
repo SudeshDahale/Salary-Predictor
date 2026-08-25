@@ -1,49 +1,44 @@
 # Salary Predictor
 
-Predict employee salaries using a trained Random Forest regression model via a simple web UI.
+Predict salaries from job details using a trained Random Forest model via a simple Flask API and web UI.
 
 ## Overview
 
-The Salary Predictor project provides an end‑to‑end solution for estimating employee salaries based on position, experience, and other features. A Flask‑based backend exposes REST endpoints for model training and salary prediction, while a static HTML frontend collects user input and displays results. Training data lives in the `data/` folder, and the trained model along with its metadata are stored under `models/` for reuse.
+Salary Predictor is a monolithic, API‑first application that lets users input job attributes (title, location, experience, etc.) through a static web page and receive a salary estimate. The backend Flask service loads a pre‑trained Random Forest regressor (stored in `models/rf_regressor.pkl`) and exposes a `/predict` endpoint. Model training is performed separately via `backend/train_model.py` on the historical dataset `data/Position_Salaries.csv`, producing the serialized model and metadata.
 
 ## Features
 
-- REST API for training (`/train`) and predicting (`/predict`) salaries built with Flask.
-- Persisted Random Forest regression model (`models/rf_regressor.pkl`) and associated metadata (`models/metadata.json`).
-- Static HTML frontend (`frontend/index.html`) that calls the backend API and renders predictions.
-- Jupyter notebook (`random_forest_regression.ipynb`) demonstrating exploratory data analysis and model evaluation.
-- All Python dependencies are captured in `backend/requirements.txt`.
+- Interactive HTML/CSS/JS frontend (`frontend/index.html`) for data entry and result display.
+- Flask API (`backend/app.py`) that loads the Random Forest model and serves real‑time salary predictions.
+- Standalone training script (`backend/train_model.py`) that builds and serializes the model from `data/Position_Salaries.csv`.
+- Persisted model artifacts (`models/rf_regressor.pkl`, `models/metadata.json`) for reproducible inference.
+- All dependencies listed in `backend/requirements.txt` (Flask, scikit-learn, pandas, etc.).
 
 ## Quick Start
 
+```bash
 ```bash
 # Clone the repository
 git clone https://github.com/SudeshDahale/Salary-Predictor.git
 cd Salary-Predictor
 
-# Set up a virtual environment (optional but recommended)
-python3 -m venv venv
-source venv/bin/activate
-
-# Install backend dependencies
+# Set up a virtual environment and install backend dependencies
+python -m venv venv
+source venv/bin/activate   # on Windows use `venv\Scripts\activate`
 pip install -r backend/requirements.txt
 
-# Run the Flask API (default runs on http://127.0.0.1:5000)
-python backend/app.py &
+# (Optional) Retrain the model – this will update `models/rf_regressor.pkl` and `models/metadata.json`
+python backend/train_model.py
 
-# Open the frontend in a browser
-xdg-open frontend/index.html   # Linux/macOS
-# or simply open frontend/index.html manually in any browser
+# Start the Flask API server
+python backend/app.py
+```
+Then open `frontend/index.html` in a browser and use the form to get salary predictions.
 ```
 
 ## Architecture
 
-The repository follows a monolithic, API‑first architecture: a single Flask application (`backend/app.py`) implements HTTP endpoints, while the frontend is a separate static site that communicates with those endpoints. Model artefacts and raw data are versioned alongside the code, making the whole pipeline reproducible.
-
-- **frontend** – static HTML/JS UI for user interaction.
-- **backend** – Flask service exposing `/train` and `/predict` routes; uses `train_model.py` to fit a Random Forest and stores results in `models/`.
-- **model_store** – `models/` directory holds the serialized model and a JSON metadata file.
-- **dataset** – `data/Position_Salaries.csv` contains the raw salary dataset used for training.
+The application is a single monolith where the Flask backend provides a JSON‑based prediction API consumed by a static HTML/JS frontend. Model training is a separate offline step that produces a serialized Random Forest model stored under `models/`. The API loads this artifact at startup, keeping inference fast and decoupled from the training pipeline.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
