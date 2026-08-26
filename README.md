@@ -1,18 +1,18 @@
 # Salary Predictor
 
-Predict salaries from job details using a trained Random Forest model via a simple Flask API and web UI.
+Predict employee salaries using a trained Random Forest model via a simple web interface.
 
 ## Overview
 
-Salary Predictor is a monolithic, API‑first application that lets users input job attributes (title, location, experience, etc.) through a static web page and receive a salary estimate. The backend Flask service loads a pre‑trained Random Forest regressor (stored in `models/rf_regressor.pkl`) and exposes a `/predict` endpoint. Model training is performed separately via `backend/train_model.py` on the historical dataset `data/Position_Salaries.csv`, producing the serialized model and metadata.
+The Salary Predictor project provides an end‑to‑end solution for estimating salaries based on job position data. It ingests the `Position_Salaries.csv` dataset, trains a Random Forest regression model, serialises the model to `rf_regressor.pkl`, and serves predictions through a Flask‑based API. A static HTML frontend collects user inputs and displays the predicted salary, making the tool accessible without any local Python setup beyond the backend server.
 
 ## Features
 
-- Interactive HTML/CSS/JS frontend (`frontend/index.html`) for data entry and result display.
-- Flask API (`backend/app.py`) that loads the Random Forest model and serves real‑time salary predictions.
-- Standalone training script (`backend/train_model.py`) that builds and serializes the model from `data/Position_Salaries.csv`.
-- Persisted model artifacts (`models/rf_regressor.pkl`, `models/metadata.json`) for reproducible inference.
-- All dependencies listed in `backend/requirements.txt` (Flask, scikit-learn, pandas, etc.).
+- Data Ingestion: Loads and preprocesses `data/Position_Salaries.csv` to create training features and targets.
+- Model Training: `backend/train_model.py` trains a scikit‑learn Random Forest regressor and saves the model artifact (`models/rf_regressor.pkl`).
+- Prediction API: `backend/app.py` implements a Flask API endpoint (`/predict`) that accepts JSON payloads and returns salary predictions.
+- Frontend UI: `frontend/index.html` provides a user‑friendly form that posts data to the API and renders the result.
+- Model Metadata: `models/metadata.json` stores training parameters and feature schema for reproducibility.
 
 ## Quick Start
 
@@ -22,23 +22,29 @@ Salary Predictor is a monolithic, API‑first application that lets users input 
 git clone https://github.com/SudeshDahale/Salary-Predictor.git
 cd Salary-Predictor
 
-# Set up a virtual environment and install backend dependencies
+# Set up a Python virtual environment
 python -m venv venv
-source venv/bin/activate   # on Windows use `venv\Scripts\activate`
+source venv/bin/activate  # on Windows use `venv\Scripts\activate`
+
+# Install backend dependencies
 pip install -r backend/requirements.txt
 
-# (Optional) Retrain the model – this will update `models/rf_regressor.pkl` and `models/metadata.json`
+# (Optional) Train the model from scratch
 python backend/train_model.py
 
 # Start the Flask API server
 python backend/app.py
+# The API will be available at http://127.0.0.1:5000/predict
+
+# Open the UI in a browser (no additional server needed)
+open frontend/index.html  # macOS
+# or use any file explorer to open `frontend/index.html`
 ```
-Then open `frontend/index.html` in a browser and use the form to get salary predictions.
 ```
 
 ## Architecture
 
-The application is a single monolith where the Flask backend provides a JSON‑based prediction API consumed by a static HTML/JS frontend. Model training is a separate offline step that produces a serialized Random Forest model stored under `models/`. The API loads this artifact at startup, keeping inference fast and decoupled from the training pipeline.
+The repository follows a monolithic, API‑first architecture: a single Flask application houses both the model loading logic and the prediction endpoint, while a separate static HTML page acts as the client. All components live in the same repository, enabling straightforward development, testing, and deployment.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
