@@ -1,18 +1,18 @@
 # Salary Predictor
 
-Predict employee salaries using a trained Random Forest model via a simple web interface.
+Predict employee salaries using a trained RandomForest model via a Flask API and a simple web UI.
 
 ## Overview
 
-Salary Predictor is a Python‑based application that trains a scikit‑learn RandomForestRegressor on the *Position_Salaries.csv* dataset and serves the model through a Flask API. A lightweight static HTML front‑end collects user inputs (e.g., position, degree, years of experience) and displays the model’s salary prediction. The repository contains the full training pipeline, the serialized model artifacts, and the client‑server code needed to run the service locally.
+The Salary Predictor project demonstrates an end‑to‑end machine‑learning workflow: a scikit‑learn RandomForest regressor is trained on the `Position_Salaries.csv` dataset, serialized, and served through a lightweight Flask API. A static HTML/JS front‑end consumes the `/predict` endpoint, allowing users to input job details and receive salary estimates in real time. The repository is organized as a monolithic code‑base with clear separation between the front‑end, back‑end, data, and model artefacts.
 
 ## Features
 
-- End‑to‑end training pipeline (`train_model.py` & notebook) that reads `data/Position_Salaries.csv`, preprocesses data, trains a RandomForestRegressor, and saves the model and metadata.
-- Flask API (`/predict`) that accepts JSON input, performs inference with the persisted model, and returns the predicted salary.
-- Static HTML UI (`frontend/index.html`) for interactive salary predictions without any JavaScript frameworks.
-- Model versioning via `models/metadata.json` to track training parameters and data source.
-- Docker‑ready requirements (`backend/requirements.txt`) for reproducible environment setup.
+- Flask API (`backend/app.py`) exposing a `/predict` endpoint that returns JSON predictions.
+- Training script (`backend/train_model.py`) to reproduce the RandomForest model and update `models/rf_regressor.pkl` and `models/metadata.json`.
+- Pre‑trained RandomForest model (`models/rf_regressor.pkl`) with accompanying metadata for inference.
+- Simple, responsive UI (`frontend/index.html`) built with HTML, CSS, and JavaScript that posts user input to the API.
+- Jupyter notebook (`random_forest_regression.ipynb`) showing exploratory data analysis and model evaluation.
 
 ## Quick Start
 
@@ -22,27 +22,28 @@ Salary Predictor is a Python‑based application that trains a scikit‑learn Ra
 git clone https://github.com/SudeshDahale/Salary-Predictor.git
 cd Salary-Predictor
 
-# Set up the backend environment (Python 3.9+ recommended)
-python -m venv venv
+# Set up a virtual environment (optional but recommended)
+python3 -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+
+# Install back‑end dependencies
 pip install -r backend/requirements.txt
 
-# (Optional) Re‑train the model – will overwrite models/rf_regressor.pkl
-python backend/train_model.py
-
-# Start the Flask server
+# Run the Flask server (default runs on http://127.0.0.1:5000)
 python backend/app.py
-# Server runs at http://127.0.0.1:5000
+```
 
-# Open the UI in a browser (no server needed for static files)
+# In a separate terminal, open the UI
 open frontend/index.html   # macOS
-# or use your file explorer to open `frontend/index.html`
+# or
+xdg-open frontend/index.html   # Linux
+# or simply open the file in any browser.
 ```
 ```
 
 ## Architecture
 
-The project follows a monolithic client‑server architecture. The **backend** (`backend/app.py`) runs a Flask web service exposing a `/predict` endpoint that loads the pickled `rf_regressor.pkl` model and returns JSON predictions. The **frontend** (`frontend/index.html`) is a static HTML page that posts user data to the Flask endpoint and renders the returned salary. Model training lives in `backend/train_model.py` (and the Jupyter notebook) and produces the serialized model (`models/rf_regressor.pkl`) and accompanying `metadata.json`.
+Monolith – API‑First: all components (data, model, Flask service, and static UI) live in a single repository. The Flask layer acts as the sole API surface, while the static front‑end consumes that API.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
