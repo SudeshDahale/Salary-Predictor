@@ -1,85 +1,84 @@
 # Salary-Predictor Developer Runbook
 
 ## Prerequisites
-- Python 3.8+ installed on the system
-- Git for source control
-- Node.js (optional, for frontend live-reload if desired)
-- Virtual environment tool (venv or virtualenv)
-- Access to the project's Git repository
+- Git
+- Python >=3.8
+- pip
+- virtualenv (or venv module)
+- A web browser for UI testing
 
 ## Environment Variables
 | Variable | Status | Description |
 | :--- | :--- | :--- |
-| `FLASK_APP` | Required | Path to the Flask application entry point. |
-| `FLASK_ENV` | Required | Set to `development` to enable debugger and auto‑reload. |
-| `MODEL_PATH` | Required | Filesystem path to the serialized RandomForest model (`models/rf_regressor.pkl`). |
-| `DATA_PATH` | Optional | Path to the raw CSV dataset used for training. Required only when invoking `train_model.py`. |
+| `FLASK_APP` | Required | Entry point for Flask; points to the main application module. |
+| `FLASK_ENV` | Optional | Set to `development` to enable debugger and auto‑reloader. |
 
 
 ## Local Setup & Development
 1. 1. Clone the repository:
-   ```bash
-   git clone https://github.com/SudeshDahale/Salary-Predictor.git
-   cd Salary-Predictor
-   ```
-2. 2. Create and activate a Python virtual environment:
-3.    ```bash
-   python -m venv venv
-   # Windows
-   venv\Scripts\activate
-   # macOS/Linux
-   source venv/bin/activate
-   ```
-4. 3. Install backend dependencies:
-5.    ```bash
-   cd backend
-   pip install -r requirements.txt
-   cd ..
-   ```
-6. 4. Verify that the training data exists at `data/Position_Salaries.csv`. The repository already contains this file.
-7. 5. (Optional) Train or re‑train the model:
-8.    ```bash
-   python backend/train_model.py
-   ```
-9.    This script reads the CSV, preprocesses the data, fits a RandomForestRegressor, and writes the serialized model to `models/rf_regressor.pkl` along with metadata in `models/metadata.json`.
-10. 6. Set required environment variables (see *Environment Variables* section).
-11. 7. Run the Flask API:
-12.    ```bash
-   export FLASK_APP=backend/app.py
-   export FLASK_ENV=development
-   export MODEL_PATH=models/rf_regressor.pkl
-   export DATA_PATH=data/Position_Salaries.csv   # only needed for retraining
-   flask run --port 5000
-   ```
-13.    The API will be reachable at `http://127.0.0.1:5000`.
-14. 8. Open the frontend UI in a browser:
-15.    - Either open `frontend/index.html` directly, or serve the `frontend` folder with a simple HTTP server for live reload:
-16.    ```bash
-   cd frontend
-   python -m http.server 8080
-   # Then navigate to http://127.0.0.1:8080
-   ```
-17. 9. Use the form on the page to submit salary prediction requests. The form posts JSON to the Flask endpoint `/predict` and displays the returned salary.
+2.    ```
+3.    git clone https://github.com/SudeshDahale/Salary-Predictor.git
+4.    cd Salary-Predictor
+5.    ```
+6. 2. Create and activate a virtual environment:
+7.    ```
+8.    python -m venv venv
+9.    # Windows
+10.    venv\Scripts\activate
+11.    # macOS/Linux
+12.    source venv/bin/activate
+13.    ```
+14. 3. Install backend dependencies:
+15.    ```
+16.    pip install -r backend/requirements.txt
+17.    ```
+18. 4. Verify that the training data exists:
+19.    - The CSV file `data/Position_Salaries.csv` should be present. If you receive a "File not found" error, ensure the `data` folder is in the project root.
+20. 5. (Optional) Train / refresh the model:
+21.    ```
+22.    python backend/train_model.py
+23.    ```
+24.    This script reads `data/Position_Salaries.csv`, fits a `RandomForestRegressor`, and writes:
+25.    - `models/rf_regressor.pkl` – the serialized model
+26.    - `models/metadata.json` – JSON with feature‑order, model version, and training timestamp.
+27.    *If the model files already exist and you do not need to retrain, you can skip this step.*
+28. 6. Set required Flask environment variables (if any). The project uses the default Flask configuration, but for explicitness you may set:
+29.    ```
+30.    export FLASK_APP=backend/app.py
+31.    export FLASK_ENV=development   # enables auto‑reloader
+32.    ```
+33. 7. Run the backend API:
+34.    ```
+35.    flask run --host=127.0.0.1 --port=5000
+36.    ```
+37.    The service will be reachable at `http://127.0.0.1:5000`.
+38. 8. Open the UI:
+39.    - Open `frontend/index.html` in a browser (e.g., double‑click the file or serve it via a simple HTTP server).
+40.    - The UI posts JSON to the backend endpoint `/predict` and displays the returned salary.
+41. 9. Development loop:
+42.    - Edit `frontend/index.html` / CSS / JS and refresh the browser.
+43.    - Edit backend code in `backend/app.py` or `backend/train_model.py` and restart Flask (auto‑reload works when `FLASK_ENV=development`).
 
 ## Running Tests
 ```bash
-pytest || echo "No test suite defined – manual verification recommended"
+curl -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" -d '{"position": "Data Scientist", "experience": 5}'
+# Expected response: {"salary": <predicted_value>}
 ```
 
 ## Troubleshooting
-### ImportError: No module named 'flask' when running `flask run`
-**Resolution:** Make sure the virtual environment is activated and that you installed the backend requirements (`pip install -r backend/requirements.txt`).
+### ImportError: No module named 'sklearn'
+**Resolution:** Ensure you installed the requirements inside the activated virtual environment (`pip install -r backend/requirements.txt`).
 
 ### FileNotFoundError: models/rf_regressor.pkl not found
-**Resolution:** Run the training script (`python backend/train_model.py`) to generate the model artifact, or verify that the file exists in the repository.
+**Resolution:** Run `python backend/train_model.py` to generate the model artifact, or copy the provided `models/rf_regressor.pkl` into the `models` directory.
 
-### CORS errors when the frontend tries to POST to the API
-**Resolution:** The Flask app includes CORS support via the `flask_cors` package. Ensure it is installed (`pip install flask-cors`) and that the `CORS(app)` call is present in `backend/app.py`.
+### Address already in use: port 5000
+**Resolution:** Either stop the process using the port or start Flask on a different port, e.g., `flask run --port=5001`.
 
-### The prediction endpoint returns a 500 error with a stack trace about a missing feature column
-**Resolution:** The input JSON must contain all features expected by the model (see `backend/app.py` for the required keys). Ensure the frontend form fields match the model's feature names.
+### Frontend shows "Failed to fetch" or CORS errors
+**Resolution:** The UI is a static file; when opened directly (`file://`), browsers block XHR to `http://127.0.0.1:5000`. Serve the UI via a simple server, e.g., `python -m http.server 8080` inside the `frontend` folder and open `http://localhost:8080`.
 
-### Changes to `frontend/index.html` are not reflected when reloading the page
-**Resolution:** If you opened the HTML file directly, the browser may cache it. Clear the cache or serve the folder via a local HTTP server (`python -m http.server`).
+### Prediction values seem wildly inaccurate
+**Resolution:** Retrain the model after verifying the CSV format. Run `python backend/train_model.py` and ensure `models/rf_regressor.pkl` is updated.
 
 
