@@ -7,5 +7,17 @@
 
 
 ## Endpoints
-No endpoints mapped.
+### `POST` 
+Predict salary based on input features
+
+**Parameters / Payload:**
+
+
+**Response:**
+```json
+
+```
+
+---
+
 
