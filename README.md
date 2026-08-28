@@ -1,45 +1,49 @@
 # Salary Predictor
 
-Instantly estimate salaries using a pre‑trained Random Forest model via a simple web UI.
+Predict employee salaries based on position data using a Flask API and a trained RandomForest model.
 
 ## Overview
 
-Salary Predictor is a Python‑Flask application that predicts a candidate's expected salary based on input factors such as job title, years of experience, and location. The project ships a pre‑trained `RandomForestRegressor` model (pickled in `models/`) and provides a lightweight HTML front‑end that calls a `/predict` API endpoint. The repository also includes a training script and the original CSV dataset, making it easy to retrain or fine‑tune the model.
+The Salary Predictor project provides a simple web interface and an API to estimate salaries for given job titles, locations, and experience levels. The backend, built with Flask, loads a pre‑trained scikit‑learn RandomForestRegressor (stored in `models/rf_regressor.pkl`) and exposes a `/predict` endpoint. The frontend (`frontend/index.html`) gathers user input, calls the API via JavaScript, and displays the predicted salary. The model is trained on the CSV dataset `data/Position_Salaries.csv` using the `backend/train_model.py` script, which also generates `models/metadata.json` for reference.
 
 ## Features
 
-- Static HTML UI (`frontend/index.html`) that collects user inputs and displays the predicted salary.
-- Flask API (`backend/app.py`) exposing a `/predict` endpoint which loads the serialized Random Forest model (`models/rf_regressor.pkl`).
-- Pre‑trained model and accompanying metadata (`models/metadata.json`) ready for immediate inference.
-- Training pipeline (`backend/train_model.py`) that reads the historic salary dataset (`data/Position_Salaries.csv`) and produces a new model pickle.
-- Jupyter notebook (`random_forest_regression.ipynb`) demonstrating data exploration, feature engineering, and model evaluation.
-- All Python dependencies listed in `backend/requirements.txt` for reproducible environments.
+- Flask API (`backend/app.py`) that loads a serialized RandomForest model and returns JSON predictions.
+- Static HTML/CSS/JS UI (`frontend/index.html`) for user-friendly salary estimation.
+- Training script (`backend/train_model.py`) that preprocesses the CSV dataset and saves the model artifact (`models/rf_regressor.pkl`).
+- Model metadata (`models/metadata.json`) documenting training parameters and feature schema.
+- All dependencies declared in `backend/requirements.txt` for reproducible environment setup.
 
 ## Quick Start
 
+```bash
 ```bash
 # Clone the repository
 git clone https://github.com/SudeshDahale/Salary-Predictor.git
 cd Salary-Predictor
 
-# Set up the backend (Flask API)
+# Set up a virtual environment and install backend dependencies
 python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 pip install -r backend/requirements.txt
 
-# Run the Flask server
-python backend/app.py &
+# (Optional) Retrain the model if you modify the data
+python backend/train_model.py
 
-# Open the frontend (no server required for static HTML)
-# You can either open the file directly in a browser or serve it with a simple HTTP server:
-cd frontend
-python -m http.server 8000   # then navigate to http://localhost:8000
+# Start the Flask prediction service
+export FLASK_APP=backend/app.py
+flask run  # defaults to http://127.0.0.1:5000
 
+# In a separate terminal, open the frontend UI
+# You can serve the static files with any simple HTTP server, e.g.:
+python -m http.server 8080 --directory frontend
+# Then navigate to http://localhost:8080 in your browser.
+```
 ```
 
 ## Architecture
 
-The repository follows a monolithic, API‑first design: a single Flask service (`backend/app.py`) loads the persisted Random Forest model and provides a `/predict` REST endpoint. The static HTML front‑end (`frontend/index.html`) gathers user input and calls this endpoint via JavaScript `fetch`. Model training lives alongside the API in `backend/train_model.py`, using the CSV data in `data/`. All components coexist in one repo, simplifying deployment and local development.
+The project follows a monolithic, API‑first design. The Flask backend acts as the single source of truth, exposing REST endpoints that load the pre‑trained RandomForestRegressor and perform inference. The frontend is a static client that consumes these endpoints via AJAX, keeping the UI decoupled from model logic while still residing in the same repository. Model training is isolated in a separate script, producing a serialized artifact and accompanying metadata stored under `models/`.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
