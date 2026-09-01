@@ -1,74 +1,45 @@
 # Salary Predictor API
 
-**Base URL:** `http://localhost:8000/api`  
-**Authentication:** None – the API is open within the local deployment. Production deployments should place the service behind authentication/proxy if needed.
+**Base URL:** `http://localhost:5000`  
+**Authentication:** None – the API is open for local use. In production a token‑based scheme should be added.
 
 ## Overview
-The Salary Predictor service provides a Flask‑based REST API for estimating salary based on job attributes using a pre‑trained RandomForestRegressor model. The API is the primary interface for the monolithic application, which also serves a static HTML frontend.
-
-**Base URL**: ``http://<host>:<port>/`` (as defined by the Flask ``app`` instance in ``backend/app.py``).
+The Salary Predictor service provides a RESTful API for estimating compensation based on job attributes. It is built with Flask, loads a pre‑trained Random Forest model from `models/rf_regressor.pkl` and exposes endpoints for prediction and optional model retraining.
 
 ## Endpoints
-### `GET` /health
-Return a health‑check confirming the service is running and the model is loaded.
+### `GET` /
+Health check returning a simple JSON confirming the service is running.
 
 **Parameters / Payload:**
 None
 
 **Response:**
 ```json
-{ "status": "ok", "model_loaded": true }
+{ "status": "ok" }
 ```
 
 ---
 ### `POST` /predict
-Predict the salary for a single job description supplied in JSON format.
+Accepts job feature data and returns the estimated salary.
 
 **Parameters / Payload:**
-{
-  "features": {
-    "YearsExperience": <float>,
-    "EducationLevel": "<string>",
-    "JobTitle": "<string>",
-    "Location": "<string>"
-    // additional numeric/categorical columns that match the training CSV
-  }
-}
+JSON object with keys matching the model's feature columns (e.g., "experience", "education_level", "city", "company_size", etc.).
 
 **Response:**
 ```json
-{
-  "predicted_salary": <float>,
-  "model_version": "<string>"
-}
+{ "predicted_salary": 85000.0 }
 ```
 
 ---
 ### `POST` /train
-Trigger a re‑training of the model using the CSV in ``data/Position_Salaries.csv``. Returns the new model version identifier.
+Triggers model retraining using the CSV dataset located at `data/Position_Salaries.csv`. Returns metadata about the new model.
 
 **Parameters / Payload:**
-None (the server reads the CSV directly). Optional JSON body can contain "reset": true to discard the existing model before retraining.
+Optional JSON with training hyper‑parameters (e.g., "n_estimators", "max_depth"). If omitted defaults are used.
 
 **Response:**
 ```json
-{
-  "message": "training completed",
-  "model_version": "<string>",
-  "accuracy": <float>
-}
-```
-
----
-### `GET` /model
-Download the current serialized model file.
-
-**Parameters / Payload:**
-None
-
-**Response:**
-```json
-Binary stream of ``models/rf_regressor.pkl`` with ``Content‑Type: application/octet-stream``
+{ "message": "model retrained", "model_version": "2023-09-01", "rmse": 10234.5 }
 ```
 
 ---
@@ -77,6 +48,7 @@ Binary stream of ``models/rf_regressor.pkl`` with ``Content‑Type: application/
 ## Error Codes
 | Code | Meaning |
 | :--- | :--- |
+| `400` | Bad request – missing or malformed JSON payload. |
 | `404` | Endpoint not found. |
-| `405` | Method not allowed for the requested URL. |
+| `500` | Internal server error – model loading or prediction failure. |
 
