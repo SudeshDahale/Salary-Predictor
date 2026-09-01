@@ -1,19 +1,19 @@
 # Salary Predictor
 
-Predict employee salaries based on position and experience using a trained Random Forest model.
+A Flask‑based web app that predicts employee salaries using a pre‑trained Random Forest model.
 
 ## Overview
 
-The Salary Predictor is a monolithic, API‑first application that trains a Random Forest regression model on a curated salary dataset, serializes the model, and serves predictions via a Flask API. A lightweight static HTML/JS frontend collects user input and calls the `/predict` endpoint to display estimated salaries.
+The Salary Predictor project provides a simple monolithic, API‑first application that lets users input job details through a static HTML/JS front‑end and receive salary predictions from a Flask back‑end powered by scikit‑learn. The repository includes the pre‑trained Random Forest model, training scripts, the raw salary dataset, and all necessary UI assets.
 
 ## Features
 
-- Data ingestion from `data/Position_Salaries.csv` for model training.
-- Model training script (`backend/train_model.py`) that builds and pickles a Random Forest regressor.
-- Model storage with metadata (`models/rf_regressor.pkl` & `models/metadata.json`).
-- Flask API (`backend/app.py`) that loads the serialized model and exposes a `/predict` endpoint.
-- Static frontend (`frontend/index.html`) that gathers user input and displays predictions via JavaScript fetch calls.
-- All dependencies isolated in `backend/requirements.txt` for reproducible environments.
+- Web UI (frontend) built with HTML, CSS, and JavaScript for intuitive salary input and result display.
+- Flask API (backend) exposing a `/predict` endpoint that returns JSON predictions.
+- Pre‑trained Random Forest regressor stored in `models/rf_regressor.pkl` with accompanying `models/metadata.json`.
+- Training pipeline (`backend/train_model.py`) that reads `data/Position_Salaries.csv` and produces the model artifact.
+- Docker‑ready requirements file (`backend/requirements.txt`) listing Flask, scikit‑learn, pandas, and other dependencies.
+- Jupyter notebook (`random_forest_regression.ipynb`) documenting exploratory data analysis and model evaluation.
 
 ## Quick Start
 
@@ -23,27 +23,23 @@ The Salary Predictor is a monolithic, API‑first application that trains a Rand
 git clone https://github.com/SudeshDahale/Salary-Predictor.git
 cd Salary-Predictor
 
-# Set up a Python virtual environment
-python3 -m venv venv
+# Set up a virtual environment (optional but recommended)
+python -m venv venv
 source venv/bin/activate   # On Windows use `venv\Scripts\activate`
 
-# Install backend dependencies
+# Install back‑end dependencies
 pip install -r backend/requirements.txt
 
-# (Optional) Retrain the model – generates `models/rf_regressor.pkl`
-python backend/train_model.py
-
-# Start the Flask API server
-python backend/app.py   # Server runs at http://127.0.0.1:5000
-
-# Open the frontend UI in a browser
-open frontend/index.html   # Or manually open the file in any web browser
+# Run the Flask server
+python backend/app.py
 ```
+
+Open `http://127.0.0.1:5000` in a browser to access the UI.
 ```
 
 ## Architecture
 
-The project follows a monolithic, API‑first design: a single Flask application (`backend/app.py`) houses the model loading, inference logic, and REST endpoint, while the static frontend (`frontend/index.html`) interacts with this API. Model training is decoupled into `backend/train_model.py`, producing a pickled Random Forest model stored under `models/`. All components reside in the same repository, making the stack straightforward for local development and deployment.
+The app follows a monolithic, API‑first design: the Flask server (`backend/app.py`) serves the `/predict` REST endpoint and also hosts the static files from `frontend/`. The front‑end makes AJAX calls to the back‑end, which loads the serialized Random Forest model from the `models/` directory and returns the predicted salary. Training utilities reside in the same repository, allowing the model to be re‑trained on the CSV data when needed.
 
 ---
 *This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
