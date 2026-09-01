@@ -1,116 +1,48 @@
-# Salary Predictor - Predictive Analytics Application 
-![Cover Image](./assets/salary-cover.png)
+# Salary Predictor
 
+Predict future salaries based on historical position data using a trained Random Forest model.
 
-Built using the exact code from `random_forest_regression.ipynb` and the `Position_Salaries.csv` dataset.
+## Overview
 
----
+The Salary Predictor repository provides a simple web‑based tool that estimates a candidate's expected salary given role, experience, and location. A Flask API (backend) loads a pre‑trained Random Forest regressor stored as a pickle file and serves prediction endpoints, while a static HTML page (frontend) collects user input and displays the results. The model is trained from the CSV dataset in the `data/` folder using the training script `backend/train_model.py`.
 
-## Deployed Link - https://salary-prediction-rf.netlify.app/
-> Wait for couple of minutes when using for the first time
+## Features
 
-## 📁 Project Structure
+- Static HTML frontend (`frontend/index.html`) that captures user inputs and renders salary predictions.
+- Flask API (`backend/app.py`) exposing `/predict` endpoint for real‑time inference.
+- Pre‑trained Random Forest regressor (`models/rf_regressor.pkl`) with accompanying metadata (`models/metadata.json`).
+- Training script (`backend/train_model.py`) to retrain the model on `data/Position_Salaries.csv` and export the updated pickle and metadata.
+- All dependencies listed in `backend/requirements.txt` for reproducible environment setup.
 
-```
-salary_predictor/
-├── random_forest_regression.ipynb   ← Original notebook (unchanged)
-├── data/
-│   └── Position_Salaries.csv        ← Original dataset (unchanged)
-├── backend/
-│   ├── train_model.py               ← Trains model using exact notebook code
-│   ├── app.py                       ← Flask REST API
-│   └── requirements.txt
-├── frontend/
-│   └── index.html                   ← UI (works offline too)
-├── models/
-│   ├── rf_regressor.pkl             ← Trained model (auto-generated)
-│   └── metadata.json                ← Model info + dataset + curve data
-└── README.md
-```
+## Quick Start
 
----
-
-## 🚀 How to Run
-
-### Step 1 — Install dependencies
 ```bash
+```bash
+# Clone the repository
+git clone https://github.com/SudeshDahale/Salary-Predictor.git
+cd Salary-Predictor
+
+# Set up a virtual environment
+python -m venv venv
+source venv/bin/activate   # On Windows use `venv\Scripts\activate`
+
+# Install backend dependencies
 pip install -r backend/requirements.txt
+
+# (Optional) Retrain the model
+python backend/train_model.py
+
+# Start the Flask API server
+python backend/app.py &
+
+# Open the frontend in a browser
+open frontend/index.html   # macOS; use `xdg-open` on Linux or double‑click on Windows
+```
 ```
 
-### Step 2 — Train the model
-```bash
-cd backend
-python train_model.py
-```
-Output:
-```
-Prediction for level 6.5: [167000.]
-Model saved to ../models/rf_regressor.pkl
-```
+## Architecture
 
-### Step 3 — Start the API
-```bash
-python backend/app.py
-# → Running on http://localhost:5000
-```
-
-### Step 4 — Open the UI
-Open `frontend/index.html` in any browser.
-
-> ✅ The UI **works offline** too — it uses a built-in model simulation when the API is not running.
+The project follows a monolithic, API‑first design: a single Flask service implements the business logic and prediction API, while the static frontend directly calls this API. Model artifacts and training data reside within the repository, making the entire stack self‑contained and easy to deploy.
 
 ---
-
-## 🤖 ML Model (Exact Notebook Code)
-
-```python
-# Importing the dataset
-dataset = pd.read_csv('Position_Salaries.csv')
-X = dataset.iloc[:, 1:-1].values
-y = dataset.iloc[:, -1].values
-
-# Training the Random Forest Regression model on the whole dataset
-from sklearn.ensemble import RandomForestRegressor
-regressor = RandomForestRegressor(n_estimators = 10, random_state = 0)
-regressor.fit(X, y)
-
-# Predicting a new result
-regressor.predict([[6.5]])   # → array([167000.])
-```
-
----
-
-## 🌐 API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/health` | Health check |
-| GET | `/api/metadata` | Model info, dataset, curve data |
-| POST | `/api/predict` | Predict salary for a given level |
-
-### Example
-```bash
-curl -X POST http://localhost:5000/api/predict \
-  -H "Content-Type: application/json" \
-  -d '{"level": 6.5}'
-```
-```json
-{ "level": 6.5, "predicted_salary": 167000.00 }
-```
-
----
-
-## 📊 Dataset
-
-| Position | Level | Salary |
-|---|---|---|
-| Business Analyst | 1 | $45,000 |
-| Junior Consultant | 2 | $50,000 |
-| Senior Consultant | 3 | $60,000 |
-| Manager | 4 | $80,000 |
-| Country Manager | 5 | $110,000 |
-| Region Manager | 6 | $150,000 |
-| Partner | 7 | $200,000 |
-| Senior Partner | 8 | $300,000 |
-| C-level | 9 | $500,000 |
-| CEO | 10 | $1,000,000 |
+*This file is kept in sync by [AutoScribe](https://github.com) — edits here may be overwritten on the next sync.*
