@@ -115,4 +115,4 @@ curl -X POST http://localhost:5000/api/predict \
 | C-level | 9 | $500,000 |
 | CEO | 10 | $1,000,000 |
 
-## Made by Sudesh
+## Made by Sudesh Dahale
